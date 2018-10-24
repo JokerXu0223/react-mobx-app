@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { Button, Text } from 'native-base';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
+import { downloadFile } from '../../utils/downloadFile';
 
 import routers from '../../constants/routers';
 import DemoStore from '../../models/demo';
@@ -21,6 +22,14 @@ const TextView = styled.Text``;
 
 @observer
 class Home extends React.Component {
+  onPressDownload = () => {
+    // downloadFile('https://btccpool.com/static/images/bg.jpg', (pro) => {
+    //   console.log('@pro', pro);
+    // });
+    downloadFile('https://hashcloudmining.com//hashcloud_video_grey.mp4', (pro) => {
+      console.log('@pro', pro);
+    });
+  };
   render() {
     const {
       props: {
@@ -41,6 +50,9 @@ class Home extends React.Component {
         </Button>
         <Button onPress={DemoStore.decrease}>
           <Text>-</Text>
+        </Button>
+        <Button onPress={this.onPressDownload}>
+          <Text>下载</Text>
         </Button>
         <Button onPress={() => navigate(routers.signIn)}>
           <Text>Go signIn</Text>
