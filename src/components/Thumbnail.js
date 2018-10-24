@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { theme } from '../constants';
 import { isAndroid } from '../utils/device';
-import defaultImage from '../img/404.png';
+import defaultImage from '../assets/img/404.png';
 
 function getRound(size) {
   return (isAndroid ? size * 2 : `${size / 2}`);

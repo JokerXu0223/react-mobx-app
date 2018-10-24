@@ -12,8 +12,8 @@ import { routers, theme } from '../../../../constants';
 import HomeScreen from './Home';
 
 // static source
-import homeIcon from '../../../../img/tabbar/home.png';
-import homeActiveIcon from '../../../../img/tabbar/home-blue.png';
+import homeIcon from '../../../../assets/img/tabbar/home.png';
+import homeActiveIcon from '../../../../assets/img/tabbar/home-blue.png';
 
 const RouteConfig = {
   [routers.home]: HomeScreen,

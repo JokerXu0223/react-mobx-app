@@ -5,7 +5,7 @@
  * @author JUSTIN XU
  */
 import styled from 'styled-components';
-import theme from '../../constants/theme';
+import theme from '../constants/theme';
 
 // divider styles
 export const HorizontalDivider = styled.View`

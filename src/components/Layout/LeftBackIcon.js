@@ -39,7 +39,7 @@ class LeftBackIcon extends React.PureComponent{
           }}
         >
           <ImageIcon
-            source={require('../../img/back.png')}
+            source={require('../../assets/img/back.png')}
             resizeMode="contain"
           />
         </TouchableView>

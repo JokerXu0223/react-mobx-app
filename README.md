@@ -1,4 +1,4 @@
-## react-native-mobx
+## react-mobx-app
 
 ### Version
 ```html
@@ -19,16 +19,22 @@ npm 5.0+(v6.4.1)
 ```html
 |--src              Source dir
   |--assets         Static source
+    |--img          
+    |--fonts        maybe you need             
   |--components     Only common & Layout
   |--constants      
-  |--mock           Xhr mock func
   |--models         Mobx store
   |--pages          Container & Self component
   |--services       Xhr api
-  |--styles         Common styles
   |--utils          
   |--index.js       Entry of Program
-  |--index.js      Top Router        
 
-|--.env-cmdrc       Base url config
 ```
+
+## Question
+
+1. download file(ios bug)
+> https://github.com/facebook/react-native/issues/4560
+
+2. version ()
+> https://blog.csdn.net/qq_24382363/article/details/83149556

@@ -10,7 +10,7 @@ import { Button } from 'react-native';
 import styled from 'styled-components';
 import { routers } from '../../../../constants';
 
-import { LeftBackIcon } from '../../../../components/Layout';
+import LeftBackIcon from '../../../../components/Layout/LeftBackIcon';
 
 const ContainerView = styled.View``;
 

@@ -14,11 +14,11 @@ import { moderateScale } from '../../../../utils/scale';
 import DemoScreen from './Demo';
 import DownloadScreen from './Download';
 
-import { DefaultHeaderView } from '../../../../components/Styles/Layout';
+import { DefaultHeaderView } from '../../../../components/Layout/Styles';
 
 // static source
-import demoIcon from '../../../../img/tabbar/discover.png';
-import demoActiveIcon from '../../../../img/tabbar/discover-blue.png';
+import demoIcon from '../../../../assets/img/tabbar/discover.png';
+import demoActiveIcon from '../../../../assets/img/tabbar/discover-blue.png';
 
 const RouteConfig = {
   [routers.demo]: DemoScreen,

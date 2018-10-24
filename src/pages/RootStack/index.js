@@ -6,7 +6,7 @@ import TabStack from './TabStack';
 import SearchModal from './Modals/Search';
 import { getHeaderHeight, getHeaderPadding } from '../../utils/device';
 import { moderateScale } from '../../utils/scale';
-import { DefaultHeaderView } from '../../components/Styles/Layout';
+import { DefaultHeaderView } from '../../components/Layout/Styles';
 
 const RouteConfigs = {
   /** Tab Stack */

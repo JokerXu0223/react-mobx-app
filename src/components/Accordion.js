@@ -107,8 +107,8 @@ Accordion.defaultProps = {
   rightUnit: '¥',
   right: null,
   onPress: () => null,
-  foldIcon: require('../img/company/fold.png'),
-  unfoldIcon: require('../img/company/unfold.png'),
+  foldIcon: require('../assets/img/company/fold.png'),
+  unfoldIcon: require('../assets/img/company/unfold.png'),
   iconSize: 14,
 };
 

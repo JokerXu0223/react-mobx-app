@@ -1,5 +1,5 @@
 /**
- * @component Layout.js
+ * @component Styles.js
  * @description 布局相关
  * @time 2018/8/7
  * @author JUSTIN XU

@@ -10,9 +10,9 @@ import RootToast from 'js-root-toast';
 import { moderateScale } from './scale';
 
 // static source
-import succeedIcon from '../img/succeed.png';
-import warningIcon from '../img/warning.png';
-import errorIcon from '../img/error.png';
+import succeedIcon from '../assets/img/succeed.png';
+import warningIcon from '../assets/img/warning.png';
+import errorIcon from '../assets/img/error.png';
 
 const ContainerView = styled.View`
   width: ${moderateScale(181)};

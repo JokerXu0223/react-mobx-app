@@ -67,7 +67,7 @@ class SearchInput extends React.Component {
           onPress={onSearch}
         >
           <SuffixImage
-            source={require('../img/search.png')}
+            source={require('../assets/img/search.png')}
           />
         </SearchButtonView>
       </SearchView>
