@@ -33,8 +33,9 @@ npm 5.0+(v6.4.1)
 
 ## Question
 
-1. download file(ios bug)
+1. download file(ios / android bug)
 > https://github.com/facebook/react-native/issues/4560
+> https://medium.com/react-native-development/fixing-problems-in-react-native-caused-by-new-permission-model-on-android-1e547f754b8
 
 2. version ()
 > https://blog.csdn.net/qq_24382363/article/details/83149556

@@ -22,4 +22,5 @@ export default {
   // Root Stack -> TabView Stack -> Demo
   demo: 'app.root.tabView.demo',
   download: 'app.root.tabView.demo.download',
+  videoPlay: 'app.root.tabView.demo.videoPlay',
 };

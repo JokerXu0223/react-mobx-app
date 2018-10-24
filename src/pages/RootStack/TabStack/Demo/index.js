@@ -13,6 +13,7 @@ import { routers, theme } from '../../../../constants';
 // import { moderateScale } from '../../../../utils/scale';
 import DemoScreen from './Demo';
 import DownloadScreen from './Download';
+import VideoPlayScreen from './VideoPlay';
 
 // import { DefaultHeaderView } from '../../../../components/Layout/Styles';
 
@@ -23,6 +24,7 @@ import demoActiveIcon from '../../../../assets/img/tabbar/discover-blue.png';
 const RouteConfig = {
   [routers.demo]: DemoScreen,
   [routers.download]: DownloadScreen,
+  [routers.videoPlay]: VideoPlayScreen,
 };
 
 const navigatorConfig = {
