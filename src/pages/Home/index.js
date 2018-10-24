@@ -7,7 +7,7 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Text } from 'react-native';
+import { Button, Text } from 'native-base';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 
@@ -36,9 +36,15 @@ class Home extends React.Component {
         </TextView>
         <Text>Counter: {DemoStore.counter}</Text>
         <Text>Total clicks: {DemoStore.total}</Text>
-        <Button onPress={DemoStore.increase} title="+" />
-        <Button onPress={DemoStore.decrease} title="-" />
-        <Button title="Go signIn" onPress={() => navigate(routers.signIn)} />
+        <Button onPress={DemoStore.increase}>
+          <Text>+</Text>
+        </Button>
+        <Button onPress={DemoStore.decrease}>
+          <Text>-</Text>
+        </Button>
+        <Button onPress={() => navigate(routers.signIn)}>
+          <Text>Go signIn</Text>
+        </Button>
       </ContainerView>
     );
   }
