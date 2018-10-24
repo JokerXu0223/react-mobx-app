@@ -1,21 +1,22 @@
 /**
  * @component index
- * @description 登陆页面
- * @time 2018/10/23
+ * @description 搜索页面
+ * @time 2018/10/24
  * @author JUSTIN XU
  */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-native';
 import styled from 'styled-components';
-import { routers } from '../../constants';
+import { routers } from '../../../../constants';
 
-const ContainerView = styled.View`
-`;
+import { LeftBackIcon } from '../../../../components/Layout';
+
+const ContainerView = styled.View``;
 
 const TextView = styled.Text``;
 
-class SignIn extends React.Component {
+class Search extends React.Component {
   render() {
     const {
       props: {
@@ -27,17 +28,26 @@ class SignIn extends React.Component {
     return (
       <ContainerView>
         <TextView>
-          signIn
+          Search
         </TextView>
-        <Button title="Go signUp" onPress={() => navigate(routers.signUp)} />
+        <Button title="Go home" onPress={() => navigate(routers.home)} />
       </ContainerView>
     );
   }
 }
 
-SignIn.defaultProps = {};
+Search.navigationOptions = ({ navigation }) => ({
+  title: 'Search',
+  headerLeft: (
+    <LeftBackIcon
+      onPress={() => navigation.goBack()}
+    />
+  ),
+});
 
-SignIn.propTypes = {
+Search.defaultProps = {};
+
+Search.propTypes = {
   navigation: PropTypes.shape({
     dispatch: PropTypes.func,
     goBack: PropTypes.func,
@@ -51,4 +61,4 @@ SignIn.propTypes = {
   }).isRequired,
 };
 
-export default SignIn;
+export default Search;

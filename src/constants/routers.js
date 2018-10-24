@@ -5,9 +5,21 @@
  * @author JUSTIN XU
  */
 export default {
-  // home module
-  home: 'app.rootView.home',
-  signIn: 'app.rootView.signIn',
-  signUp: 'app.rootView.signUp',
-  // common model
+  // initial loading screen
+  authLoading: 'app.authLoading',
+  // Auth Stack
+  auth: 'app.auth',
+  signIn: 'app.auth.signIn',
+  signUp: 'app.auth.signUp',
+  // Root Stack
+  root: 'app.root',
+  // Root Stack -> Modals
+  search: 'app.root.search',
+  // tabView
+  tabView: 'app.root.tabView',
+  // Root Stack -> TabView Stack -> Home
+  home: 'app.root.tabView.home',
+  // Root Stack -> TabView Stack -> Demo
+  demo: 'app.root.tabView.demo',
+  download: 'app.root.tabView.demo.download',
 };

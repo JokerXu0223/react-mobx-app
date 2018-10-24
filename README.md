@@ -28,7 +28,7 @@ npm 5.0+(v6.4.1)
   |--styles         Common styles
   |--utils          
   |--index.js       Entry of Program
-  |--router.js      Top Router        
+  |--index.js      Top Router        
 
 |--.env-cmdrc       Base url config
 ```

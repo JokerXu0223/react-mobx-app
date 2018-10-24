@@ -1,23 +1,26 @@
 /**
- * @component index
- * @description 注册页面
+ * @component index.js
+ * @description 首页
  * @time 2018/10/23
  * @author JUSTIN XU
  */
 import React from 'react';
 // import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button } from 'react-native';
+import { Button, Text } from 'native-base';
 import PropTypes from 'prop-types';
-import routers from '../../constants/routers';
+
+import routers from '../../../../constants/routers';
 // import { theme } from '../../../constants';
 
-const ContainerView = styled.View`
-`;
+// components
+import CommStatusBar from '../../../../components/Layout/CommStatusBar';
+
+const ContainerView = styled.View``;
 
 const TextView = styled.Text``;
 
-class SignUp extends React.Component {
+class Home extends React.Component {
   render() {
     const {
       props: {
@@ -28,18 +31,28 @@ class SignUp extends React.Component {
     } = this;
     return (
       <ContainerView>
+        <CommStatusBar />
         <TextView>
-          SignUp
+          HOME
         </TextView>
-        <Button title="Go Home" onPress={() => navigate(routers.home)} />
+        <Button onPress={() => navigate(routers.signIn)}>
+          <Text>Go signIn</Text>
+        </Button>
+        <Button onPress={() => navigate(routers.search)}>
+          <Text>Go search</Text>
+        </Button>
       </ContainerView>
     );
   }
 }
 
-SignUp.defaultProps = {};
+Home.navigationOptions = ({ navigation }) => ({
+  title: 'home',
+});
 
-SignUp.propTypes = {
+Home.defaultProps = {};
+
+Home.propTypes = {
   navigation: PropTypes.shape({
     dispatch: PropTypes.func,
     goBack: PropTypes.func,
@@ -53,4 +66,4 @@ SignUp.propTypes = {
   }).isRequired,
 };
 
-export default SignUp;
+export default Home;
