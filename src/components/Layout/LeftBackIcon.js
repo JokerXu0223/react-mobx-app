@@ -23,7 +23,7 @@ const ImageIcon = styled.Image`
   height: ${moderateScale(18)};
 `;
 
-class LeftBackIcon extends React.PureComponent{
+class LeftBackIcon extends React.PureComponent {
   render() {
     const {
       props: { onPress },

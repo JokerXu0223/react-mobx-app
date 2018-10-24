@@ -29,14 +29,14 @@ const TabItemView = styled(TouchableView)`
   height: ${moderateScale(26)};
   align-items: center;
   justify-content: center;
-  borderRightWidth: ${props => props.isLast ? '0' : '1px' };
+  borderRightWidth: ${props => props.isLast ? '0' : '1px'};
   borderRightColor: #F6F6F6;
 `;
 
 const HeaderText = styled.Text`
   font-family:${theme.fontMedium};
   font-size:  ${theme.moderateScale(16)};
-  color: ${props => props.active ? '#18B548' : '#696969' };
+  color: ${props => props.active ? '#18B548' : '#696969'};
 `;
 
 class TabContainer extends React.PureComponent {

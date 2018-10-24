@@ -53,7 +53,8 @@ class Download extends React.Component {
   }
 }
 
-Download.navigationOptions = ({ navigation }) => ({
+// { navigation }
+Download.navigationOptions = () => ({
   title: 'download',
 });
 

@@ -46,7 +46,8 @@ class Home extends React.Component {
   }
 }
 
-Home.navigationOptions = ({ navigation }) => ({
+// { navigation }
+Home.navigationOptions = () => ({
   title: 'home',
 });
 

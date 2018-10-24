@@ -9,12 +9,12 @@ import PropTypes from 'prop-types';
 import { Image } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import { routers, theme } from '../../../../constants';
-import { getHeaderPadding, getHeaderHeight } from '../../../../utils/device';
-import { moderateScale } from '../../../../utils/scale';
+// import { getHeaderPadding, getHeaderHeight } from '../../../../utils/device';
+// import { moderateScale } from '../../../../utils/scale';
 import DemoScreen from './Demo';
 import DownloadScreen from './Download';
 
-import { DefaultHeaderView } from '../../../../components/Layout/Styles';
+// import { DefaultHeaderView } from '../../../../components/Layout/Styles';
 
 // static source
 import demoIcon from '../../../../assets/img/tabbar/discover.png';

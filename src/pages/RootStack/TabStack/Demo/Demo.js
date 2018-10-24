@@ -53,7 +53,8 @@ class Demo extends React.Component {
   }
 }
 
-Demo.navigationOptions = ({ navigation }) => ({
+// { navigation }
+Demo.navigationOptions = () => ({
   title: 'Demo',
 });
 

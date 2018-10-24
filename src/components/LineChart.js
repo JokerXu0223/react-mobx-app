@@ -83,7 +83,7 @@ class LineChart extends React.PureComponent {
           showSymbol: false,
         },
       ],
-    }
+    };
     return (
       <Echarts
         option={option}
