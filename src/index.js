@@ -6,6 +6,8 @@
  */
 import React from 'react';
 import { BackHandler } from 'react-native';
+import { Provider } from 'mobx-react';
+import RootStore from './models';
 
 import Navigator from './pages';
 import { goBack, registerTopNavigator } from './utils/navigationService';
@@ -35,12 +37,14 @@ class App extends React.Component {
   };
   render() {
     return (
-      <Navigator
-        ref={(navigatorRef) => {
-          this.navigatorRef = navigatorRef;
-          registerTopNavigator(navigatorRef);
-        }}
-      />
+      <Provider rootStore={RootStore}>
+        <Navigator
+          ref={(navigatorRef) => {
+            this.navigatorRef = navigatorRef;
+            registerTopNavigator(navigatorRef);
+          }}
+        />
+      </Provider>
     );
   }
 }

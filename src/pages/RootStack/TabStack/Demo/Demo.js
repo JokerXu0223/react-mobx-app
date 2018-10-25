@@ -6,7 +6,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import styled from 'styled-components';
 import { Text, Button } from 'native-base';
 
@@ -14,18 +14,22 @@ import { Text, Button } from 'native-base';
 import CommStatusBar from '../../../../components/Layout/CommStatusBar';
 
 import { routers } from '../../../../constants';
-import DemoStore from '../../../../models/demo';
+// import DemoStore from '../../../../models/demo';
 
 const ContainerView = styled.View`
 `;
 
 const TextView = styled.Text``;
 
+@inject(({ rootStore }) => ({
+  demoStore: rootStore.demoStore,
+}))
 @observer
 class Demo extends React.Component {
   render() {
     const {
       props: {
+        demoStore,
         navigation: {
           navigate,
         },
@@ -37,12 +41,12 @@ class Demo extends React.Component {
         <TextView>
           demo
         </TextView>
-        <Text>Counter: {DemoStore.counter}</Text>
-        <Text>Total clicks: {DemoStore.total}</Text>
-        <Button onPress={DemoStore.increase}>
+        <Text>Counter: {demoStore.counter}</Text>
+        <Text>Total clicks: {demoStore.total}</Text>
+        <Button onPress={demoStore.increase}>
           <Text>+</Text>
         </Button>
-        <Button onPress={DemoStore.decrease}>
+        <Button onPress={demoStore.decrease}>
           <Text>-</Text>
         </Button>
         <Button onPress={() => navigate(routers.download)}>
@@ -58,13 +62,16 @@ Demo.navigationOptions = () => ({
   title: 'Demo',
 });
 
-Demo.defaultProps = {};
+Demo.defaultProps = {
+  demoStore: {},
+};
 
 Demo.propTypes = {
   navigation: PropTypes.shape({
     dispatch: PropTypes.func,
     goBack: PropTypes.func,
     navigate: PropTypes.func,
+    getParam: PropTypes.func,
     setParams: PropTypes.func,
     state: PropTypes.shape({
       key: PropTypes.string,
@@ -72,6 +79,7 @@ Demo.propTypes = {
       params: PropTypes.object,
     }),
   }).isRequired,
+  demoStore: PropTypes.objectOf(PropTypes.any),
 };
 
 export default Demo;
