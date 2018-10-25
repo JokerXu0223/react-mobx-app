@@ -20,7 +20,7 @@ npm 5.0+(v6.4.1)
 |--src              Source dir
   |--assets         Static source
     |--img          
-    |--fonts        maybe you need             
+    |--fonts        Maybe you need             
   |--components     Only common & Layout
   |--constants      
   |--models         Mobx store
@@ -37,5 +37,5 @@ npm 5.0+(v6.4.1)
 > https://github.com/facebook/react-native/issues/4560
 > https://medium.com/react-native-development/fixing-problems-in-react-native-caused-by-new-permission-model-on-android-1e547f754b8
 
-2. version ()
+2. version
 > https://blog.csdn.net/qq_24382363/article/details/83149556

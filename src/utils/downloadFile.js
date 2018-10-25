@@ -39,6 +39,7 @@ export const downloadFile = (uri, callback) => {
       ret.promise.then((res) => {
         console.log('success', res);
         console.log(`file://${downloadDest}`);
+        resolve(`file://${downloadDest}`);
         const promise = CameraRoll.saveToCameraRoll(downloadDest);
         promise.then((result) => {
           console.log(`保存成功！地址如下：\n${result}`);

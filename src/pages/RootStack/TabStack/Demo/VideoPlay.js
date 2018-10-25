@@ -5,13 +5,16 @@
  * @author JUSTIN XU
  */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { View, Dimensions, Image, Text, Slider, TouchableWithoutFeedback, TouchableOpacity, Button, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
 // import styled from 'styled-components';
 import { Container } from 'native-base';
 import Orientation from 'react-native-orientation';
 
+// static source
 import logoIcon from '../../../../assets/img/test/logo.jpg';
+// import hashVideo from '../../../../assets/video/hashcloud_video.mp4';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -62,16 +65,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class VideoPlayScreen extends Component {
-  static navigationOptions = {
-    headerTitle: '测试视频播放',
-  };
-
+class VideoPlayScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // videoUrl: 'assets-library://asset/asset.mp4?id=A0785DCF-B068-4948-8F39-9B6BF722B21F&ext=mp4',
-      videoUrl: 'https://hashcloudmining.com//hashcloud_video_grey.mp4',
+      // videoUrl: 'file://assets-library://asset/asset.mp4?id=C4254C99-39B8-47F4-8C88-A1A3866A904C&ext=mp4',
+      // videoUrl: 'https://hashcloudmining.com//hashcloud_video_grey.mp4',
       videoCover: logoIcon,
       videoWidth: screenWidth,
       videoHeight: (screenWidth * 9) / 16, // 默认16：9的宽高比
@@ -238,7 +237,7 @@ export default class VideoPlayScreen extends Component {
   // / 切换视频并可以指定视频开始播放的时间，提供给外部调用
   switchVideo(videoURL, seekTime) {
     this.setState({
-      videoUrl: videoURL,
+      // videoUrl: videoURL,
       currentTime: seekTime,
       isPlaying: true,
       showVideoCover: false,
@@ -251,9 +250,19 @@ export default class VideoPlayScreen extends Component {
       state: {
         videoWidth,
         videoHeight,
-        videoUrl,
+        isPlaying,
+        showVideoCover,
+        videoCover,
+      },
+      props: {
+        navigation: {
+          state: {
+            params = {},
+          } = {},
+        },
       },
     } = this;
+    const { videoUrl } = params;
     return (
       <Container
         onLayout={this.onLayout}
@@ -271,7 +280,7 @@ export default class VideoPlayScreen extends Component {
             rate={1.0}
             volume={1.0}
             muted={false}
-            paused={!this.state.isPlaying}
+            paused={!isPlaying}
             resizeMode="contain"
             playWhenInactive={false}
             playInBackground={false}
@@ -283,20 +292,23 @@ export default class VideoPlayScreen extends Component {
             onEnd={this.onPlayEnd}
             onError={this.onPlayError}
             onBuffer={this.onBuffering}
-            style={{ width: this.state.videoWidth, height: this.state.videoHeight }}
+            style={{
+              width: videoWidth,
+              height: videoHeight,
+            }}
           />
           {
-            this.state.showVideoCover ?
+            showVideoCover ?
               <Image
                 style={{
                   position: 'absolute',
                   top: 0,
                   left: 0,
-                  width: this.state.videoWidth,
-                  height: this.state.videoHeight,
+                  width: videoWidth,
+                  height: videoHeight,
                 }}
                 resizeMode="cover"
-                source={this.state.videoCover}
+                source={videoCover}
               /> : null
           }
           <TouchableWithoutFeedback onPress={() => { this.hideControl(); }}>
@@ -305,9 +317,9 @@ export default class VideoPlayScreen extends Component {
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                width: this.state.videoWidth,
-                height: this.state.videoHeight,
-                backgroundColor: this.state.isPlaying ? 'transparent' : 'rgba(0, 0, 0, 0.2)',
+                width: videoWidth,
+                height: videoHeight,
+                backgroundColor: isPlaying ? 'transparent' : 'rgba(0, 0, 0, 0.2)',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
@@ -362,3 +374,26 @@ export default class VideoPlayScreen extends Component {
     );
   }
 }
+
+// { navigation }
+VideoPlayScreen.navigationOptions = () => ({
+  title: '视频播放',
+});
+
+VideoPlayScreen.defaultProps = {};
+
+VideoPlayScreen.propTypes = {
+  navigation: PropTypes.shape({
+    dispatch: PropTypes.func,
+    goBack: PropTypes.func,
+    navigate: PropTypes.func,
+    setParams: PropTypes.func,
+    state: PropTypes.shape({
+      key: PropTypes.string,
+      routeName: PropTypes.string,
+      params: PropTypes.object,
+    }),
+  }).isRequired,
+};
+
+export default VideoPlayScreen;
