@@ -15,7 +15,7 @@ const RouteConfig = {
 };
 
 const navigatorConfig = {
-  initialRouteName: routers.home,
+  initialRouteName: routers.demo,
   tabBarOptions: {
     style: {
       height: theme.moderateScale(49),

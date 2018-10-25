@@ -33,8 +33,11 @@ const MessageText = styled.Text`
   line-height:${moderateScale(15)};
 `;
 
-const SuccessText = MessageText.extend`
+const SuccessText = styled.Text`
   color: #000000;
+  margin-top:${moderateScale(12)};
+  text-align: center;
+  line-height:${moderateScale(15)};
 `;
 
 const Toast = {
