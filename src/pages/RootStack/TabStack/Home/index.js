@@ -14,6 +14,7 @@ import HomeScreen from './Home';
 // static source
 import homeIcon from '../../../../assets/img/tabbar/home.png';
 import homeActiveIcon from '../../../../assets/img/tabbar/home-blue.png';
+import { DefaultHeaderView } from '../../../../components/Layout/Styles';
 
 const RouteConfig = {
   [routers.home]: HomeScreen,
@@ -24,6 +25,16 @@ const navigatorConfig = {
   cardStyle: { shadowColor: 'transparent' },
   mode: 'card',
   // headerMode: 'none',
+  navigationOptions: {
+    headerStyle: theme.headerStyle,
+    headerTitleStyle: theme.headerTitleStyle,
+    headerLeft: (
+      <DefaultHeaderView />
+    ),
+    headerRight: (
+      <DefaultHeaderView />
+    ),
+  },
 };
 
 const HomeStack = createStackNavigator(RouteConfig, navigatorConfig);

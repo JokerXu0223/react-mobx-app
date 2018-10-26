@@ -17,7 +17,7 @@ const CommStatusBar = ({ barStyle, backgroundColor, translucent }) => (
 );
 
 CommStatusBar.defaultProps = {
-  barStyle: 'dark-content',
+  barStyle: 'light-content',
   backgroundColor: 'transparent',
   translucent: true,
 };

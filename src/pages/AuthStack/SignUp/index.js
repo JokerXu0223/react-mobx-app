@@ -10,10 +10,12 @@ import styled from 'styled-components';
 import { Button } from 'react-native';
 import PropTypes from 'prop-types';
 import routers from '../../../constants/routers';
-// import { theme } from '../../../constants';
 
-const ContainerView = styled.View`
-`;
+// components
+import CommStatusBar from '../../../components/Layout/CommStatusBar';
+import LeftBackIcon from '../../../components/Layout/LeftBackIcon';
+
+const ContainerView = styled.View``;
 
 const TextView = styled.Text``;
 
@@ -28,6 +30,7 @@ class SignUp extends React.Component {
     } = this;
     return (
       <ContainerView>
+        <CommStatusBar />
         <TextView>
           SignUp
         </TextView>
@@ -37,6 +40,15 @@ class SignUp extends React.Component {
   }
 }
 
+SignUp.navigationOptions = ({ navigation }) => ({
+  title: 'SignUp',
+  headerLeft: (
+    <LeftBackIcon
+      onPress={() => navigation.goBack()}
+    />
+  ),
+});
+
 SignUp.defaultProps = {};
 
 SignUp.propTypes = {
@@ -45,6 +57,7 @@ SignUp.propTypes = {
     goBack: PropTypes.func,
     navigate: PropTypes.func,
     setParams: PropTypes.func,
+    getParam: PropTypes.func,
     state: PropTypes.shape({
       key: PropTypes.string,
       routeName: PropTypes.string,
