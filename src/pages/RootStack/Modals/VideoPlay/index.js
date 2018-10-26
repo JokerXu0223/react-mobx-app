@@ -1,5 +1,5 @@
 /**
- * @component VideoPlay.js
+ * @component index.js
  * @description 视频播放
  * @time 2018/10/24
  * @author JUSTIN XU

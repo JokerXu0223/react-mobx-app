@@ -1,6 +1,6 @@
 /**
- * @component VideoList.js
- * @description 下载音屏组件
+ * @component DiscoverList.js
+ * @description 发现音屏组件
  * @time 2018/10/26
  * @author JUSTIN XU
  */
@@ -51,7 +51,7 @@ const VideoDeleteText = styled.Text`
    color: ${theme.primaryColor};
 `;
 
-const VideoList = ({
+const DiscoverList = ({
   videoList,
   onPlayItemReq,
   onDeleteItemReq,
@@ -89,15 +89,15 @@ const VideoList = ({
   );
 };
 
-VideoList.defaultProps = {
+DiscoverList.defaultProps = {
   onPlayItemReq: () => null,
   onDeleteItemReq: () => null,
 };
 
-VideoList.propTypes = {
+DiscoverList.propTypes = {
   videoList: PropTypes.objectOf(PropTypes.any).isRequired,
   onPlayItemReq: PropTypes.func,
   onDeleteItemReq: PropTypes.func,
 };
 
-export default VideoList;
+export default DiscoverList;

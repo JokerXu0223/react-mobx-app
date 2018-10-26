@@ -52,19 +52,21 @@ class Download extends React.Component {
   render() {
     const {
       props: {
-        downloadFileStore,
+        downloadFileStore: {
+          loading,
+          videoList,
+          getDownloadReq,
+          clearStrongListReq,
+          onDeleteItemReq,
+        },
         navigation: {
           navigate,
         },
       },
     } = this;
-    const {
-      loading,
-      getDownloadReq,
-      clearStrongListReq,
-    } = downloadFileStore;
     const videoListProps = {
-      downloadFileStore,
+      videoList,
+      onDeleteItemReq,
       onPlayItemReq: (uri) => {
         navigate(routers.videoPlay, { videoUrl: uri });
       },

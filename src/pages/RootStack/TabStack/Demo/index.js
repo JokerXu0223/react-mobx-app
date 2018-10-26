@@ -9,9 +9,10 @@ import PropTypes from 'prop-types';
 import { Image } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import { routers, theme } from '../../../../constants';
+
 import DemoScreen from './Demo';
+import DiscoverScreen from './Discover';
 import DownloadScreen from './Download';
-import VideoPlayScreen from './VideoPlay';
 
 // static source
 import demoIcon from '../../../../assets/img/tabbar/discover.png';
@@ -20,12 +21,12 @@ import { DefaultHeaderView } from '../../../../components/Layout/Styles';
 
 const RouteConfig = {
   [routers.demo]: DemoScreen,
+  [routers.discover]: DiscoverScreen,
   [routers.download]: DownloadScreen,
-  [routers.videoPlay]: VideoPlayScreen,
 };
 
 const navigatorConfig = {
-  initialRouteName: routers.download,
+  initialRouteName: routers.discover,
   cardStyle: { shadowColor: 'transparent' },
   mode: 'card',
   // headerMode: 'none',
