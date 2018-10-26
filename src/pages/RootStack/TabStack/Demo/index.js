@@ -25,7 +25,7 @@ const RouteConfig = {
 };
 
 const navigatorConfig = {
-  initialRouteName: routers.demo,
+  initialRouteName: routers.download,
   cardStyle: { shadowColor: 'transparent' },
   mode: 'card',
   // headerMode: 'none',

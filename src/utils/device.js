@@ -40,6 +40,7 @@ export function getHeaderPadding(androidBar = false) {
     return androidBar ? StatusBar.currentHeight : 0;
   }
   if (Platform.OS === 'ios') {
+    if (androidBar) return 0; // Handling vertical screen to switch to landscape
     if (isIphoneX()) {
       return 44;
     }

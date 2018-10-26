@@ -16,6 +16,7 @@ if (!__DEV__) {
 } else {
   YellowBox.ignoreWarnings([
     // 'Warning: The "extend" API will be removed',
+    'Require cycle: node_modules/native-base/dist',
     'Warning: "Provider": It is not recommended to assign props directly to ',
   ]);
 }
