@@ -18,6 +18,7 @@ import Toast from '../../../../utils/toast';
 
 // components
 import CommStatusBar from '../../../../components/Layout/CommStatusBar';
+import LeftBackIcon from '../../../../components/Layout/LeftBackIcon';
 
 const ContainerView = styled.View`
 `;
@@ -94,9 +95,13 @@ class Download extends React.Component {
   }
 }
 
-// { navigation }
-Download.navigationOptions = () => ({
+Download.navigationOptions = ({ navigation }) => ({
   title: 'download',
+  headerLeft: (
+    <LeftBackIcon
+      onPress={() => navigation.goBack()}
+    />
+  ),
 });
 
 Download.defaultProps = {};
@@ -107,6 +112,7 @@ Download.propTypes = {
     goBack: PropTypes.func,
     navigate: PropTypes.func,
     setParams: PropTypes.func,
+    getParam: PropTypes.func,
     state: PropTypes.shape({
       key: PropTypes.string,
       routeName: PropTypes.string,

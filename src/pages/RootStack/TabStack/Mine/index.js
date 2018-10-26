@@ -1,6 +1,6 @@
 /**
  * @component index.js
- * @description demo路由配置
+ * @description home路由配置
  * @time 2018/10/24
  * @author JUSTIN XU
  */
@@ -9,23 +9,19 @@ import PropTypes from 'prop-types';
 import { Image } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import { routers, theme } from '../../../../constants';
-import DemoScreen from './Demo';
-import DownloadScreen from './Download';
-import VideoPlayScreen from './VideoPlay';
+import MineScreen from './Mine';
 
 // static source
-import demoIcon from '../../../../assets/img/tabbar/discover.png';
-import demoActiveIcon from '../../../../assets/img/tabbar/discover-blue.png';
+import mineIcon from '../../../../assets/img/tabbar/mine.png';
+import mineActiveIcon from '../../../../assets/img/tabbar/mine-blue.png';
 import { DefaultHeaderView } from '../../../../components/Layout/Styles';
 
 const RouteConfig = {
-  [routers.demo]: DemoScreen,
-  [routers.download]: DownloadScreen,
-  [routers.videoPlay]: VideoPlayScreen,
+  [routers.mine]: MineScreen,
 };
 
 const navigatorConfig = {
-  initialRouteName: routers.demo,
+  initialRouteName: routers.mine,
   cardStyle: { shadowColor: 'transparent' },
   mode: 'card',
   // headerMode: 'none',
@@ -41,11 +37,11 @@ const navigatorConfig = {
   },
 };
 
-const HomeStack = createStackNavigator(RouteConfig, navigatorConfig);
+const MineStack = createStackNavigator(RouteConfig, navigatorConfig);
 
 const tabBarIcon = ({ focused }) => (
   <Image
-    source={focused ? demoActiveIcon : demoIcon}
+    source={focused ? mineActiveIcon : mineIcon}
     style={{ height: theme.moderateScale(22), width: theme.moderateScale(28) }}
     resizeMode="contain"
   />
@@ -55,13 +51,13 @@ tabBarIcon.propTypes = {
   focused: PropTypes.bool.isRequired,
 };
 
-HomeStack.navigationOptions = ({ navigation }) => {
+MineStack.navigationOptions = ({ navigation }) => {
   const { index } = navigation.state;
   return {
     tabBarVisible: index === 0,
-    tabBarLabel: 'Demo',
+    tabBarLabel: '我的',
     tabBarIcon,
   };
 };
 
-export default HomeStack;
+export default MineStack;

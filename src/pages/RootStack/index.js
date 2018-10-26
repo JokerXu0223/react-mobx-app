@@ -4,8 +4,6 @@ import { routers, theme } from '../../constants';
 import TabStack from './TabStack';
 
 import SearchModal from './Modals/Search';
-import { getHeaderHeight, getHeaderPadding } from '../../utils/device';
-import { moderateScale } from '../../utils/scale';
 import { DefaultHeaderView } from '../../components/Layout/Styles';
 
 const RouteConfigs = {
@@ -22,22 +20,8 @@ const NavigatorConfig = {
   // headerMode: 'none',
   cardStyle: { shadowColor: 'transparent' },
   navigationOptions: {
-    headerStyle: {
-      paddingTop: getHeaderPadding(true),
-      backgroundColor: theme.whiteColor,
-      elevation: 0, // 去掉阴影
-      height: getHeaderHeight() - getHeaderPadding(),
-    },
-    headerTitleStyle: {
-      color: theme.textColor,
-      alignSelf: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      fontSize: moderateScale(18),
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
+    headerStyle: theme.headerStyle,
+    headerTitleStyle: theme.headerTitleStyle,
     headerLeft: (
       <DefaultHeaderView />
     ),

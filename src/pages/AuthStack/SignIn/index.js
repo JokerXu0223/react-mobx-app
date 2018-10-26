@@ -8,7 +8,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-native';
 import styled from 'styled-components';
-import { routers } from '../../../constants/index';
+import { routers } from '../../../constants';
+
+// components
+import CommStatusBar from '../../../components/Layout/CommStatusBar';
+import LeftBackIcon from '../../../components/Layout/LeftBackIcon';
 
 const ContainerView = styled.View`
 `;
@@ -26,6 +30,7 @@ class SignIn extends React.Component {
     } = this;
     return (
       <ContainerView>
+        <CommStatusBar />
         <TextView>
           signIn
         </TextView>
@@ -35,6 +40,18 @@ class SignIn extends React.Component {
   }
 }
 
+SignIn.navigationOptions = ({ navigation }) => {
+  const fromRouteId = navigation.getParam('fromRouteId', routers.home);
+  return {
+    title: 'SignIn',
+    headerLeft: (
+      <LeftBackIcon
+        onPress={() => navigation.navigate(fromRouteId)}
+      />
+    ),
+  };
+};
+
 SignIn.defaultProps = {};
 
 SignIn.propTypes = {
@@ -43,6 +60,7 @@ SignIn.propTypes = {
     goBack: PropTypes.func,
     navigate: PropTypes.func,
     setParams: PropTypes.func,
+    getParam: PropTypes.func,
     state: PropTypes.shape({
       key: PropTypes.string,
       routeName: PropTypes.string,

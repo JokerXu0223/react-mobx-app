@@ -1,23 +1,26 @@
 /**
- * @component index
- * @description 搜索页面
- * @time 2018/10/24
+ * @component index.js
+ * @description 我的
+ * @time 2018/10/25
  * @author JUSTIN XU
  */
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Button } from 'react-native';
+// import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { routers } from '../../../../constants';
+import { Button, Text } from 'native-base';
+import PropTypes from 'prop-types';
 
-import LeftBackIcon from '../../../../components/Layout/LeftBackIcon';
+import routers from '../../../../constants/routers';
+// import { theme } from '../../../constants';
+
+// components
 import CommStatusBar from '../../../../components/Layout/CommStatusBar';
 
 const ContainerView = styled.View``;
 
 const TextView = styled.Text``;
 
-class Search extends React.Component {
+class Mine extends React.Component {
   render() {
     const {
       props: {
@@ -30,26 +33,26 @@ class Search extends React.Component {
       <ContainerView>
         <CommStatusBar />
         <TextView>
-          Search
+          Mine
         </TextView>
-        <Button title="Go home" onPress={() => navigate(routers.home)} />
+        <Button onPress={() => navigate(routers.signIn, { fromRouteId: routers.mine })}>
+          <Text>Go signIn</Text>
+        </Button>
+        <Button onPress={() => navigate(routers.search)}>
+          <Text>Go search</Text>
+        </Button>
       </ContainerView>
     );
   }
 }
 
-Search.navigationOptions = ({ navigation }) => ({
-  title: 'Search',
-  headerLeft: (
-    <LeftBackIcon
-      onPress={() => navigation.goBack()}
-    />
-  ),
+Mine.navigationOptions = () => ({
+  title: 'mine',
 });
 
-Search.defaultProps = {};
+Mine.defaultProps = {};
 
-Search.propTypes = {
+Mine.propTypes = {
   navigation: PropTypes.shape({
     dispatch: PropTypes.func,
     goBack: PropTypes.func,
@@ -64,4 +67,4 @@ Search.propTypes = {
   }).isRequired,
 };
 
-export default Search;
+export default Mine;

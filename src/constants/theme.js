@@ -5,9 +5,10 @@
  * @author JUSTIN XU
  */
 import { moderateScale } from '../utils/scale';
+import { getHeaderHeight, getHeaderPadding } from '../utils/device';
 
 export default {
-  primaryColor: '#18B548',
+  primaryColor: '#5983F0',
   whiteColor: '#FFFFFF',
   headerBackgroundColor: '#333333',
   dangerColor: '#D32E2B',
@@ -31,4 +32,22 @@ export default {
   headerHeight: 45,
   iconSize: 22,
   moderateScale: (size, factor) => moderateScale(size, factor),
+  // header
+  headerStyle: {
+    paddingTop: getHeaderPadding(true),
+    backgroundColor: '#333238',
+    elevation: 0, // 去掉阴影
+    height: getHeaderHeight() - getHeaderPadding(),
+  },
+  headerTitleStyle: {
+    flex: 1,
+    color: '#fff',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    fontSize: moderateScale(18),
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 };

@@ -7,11 +7,13 @@
 // import { action, reaction, observable, observe, computed, autorun, runInAction } from 'mobx';
 import { action, reaction, observable } from 'mobx';
 import autobind from 'autobind-decorator';
+import { delay } from '../services/demo';
 
 @autobind
 class DemoStore {
   @observable counter = 0;
   @observable total = 0;
+  @observable loading = '';
 
   constructor() {
     reaction(() => this.counter, this.increaseTotal);
@@ -23,7 +25,7 @@ class DemoStore {
   //     const {
   //       totalCount = null,
   //       result = [],
-  //     } = await HomeService.getRedPacketList();
+  //     } = await getRedPacketList();
   //     runInAction(() => {
   //       this.redPackTotal = totalCount;
   //       this.redPackList = [...result];
@@ -33,15 +35,20 @@ class DemoStore {
   //   }
   // }
 
-  @action increaseTotal = async () => {
+  @action increaseTotal() {
     this.total++;
+    this.loading = '';
   }
 
-  @action increase() {
+  @action async increase() {
+    this.loading = 'increase';
+    await delay();
     this.counter++;
   }
 
-  @action decrease() {
+  @action async decrease() {
+    this.loading = 'decrease';
+    await delay();
     this.counter--;
   }
 }

@@ -6,17 +6,26 @@
  */
 import { createBottomTabNavigator } from 'react-navigation';
 import { routers, theme } from '../../../constants';
+
 import HomeScreen from './Home';
 import DemoScreen from './Demo';
+import MineScreen from './Mine';
 
 const RouteConfig = {
   [routers.home]: HomeScreen,
   [routers.demo]: DemoScreen,
+  [routers.mine]: MineScreen,
 };
 
 const navigatorConfig = {
   initialRouteName: routers.demo,
   tabBarOptions: {
+    activeTintColor: theme.primaryColor,
+    inactiveTintColor: theme.textColor,
+    labelStyle: {
+      fontSize: theme.moderateScale(10),
+      marginLeft: 0,
+    },
     style: {
       height: theme.moderateScale(49),
       backgroundColor: theme.headerColor,
@@ -30,11 +39,6 @@ const navigatorConfig = {
       flexDirection: 'column',
       flexWrap: 'nowrap',
       alignItems: 'center',
-    },
-    labelStyle: {
-      fontSize: theme.moderateScale(10),
-      color: theme.textColor,
-      marginLeft: 0,
     },
   },
 };

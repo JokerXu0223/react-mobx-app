@@ -6,21 +6,19 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-// import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Icon } from 'native-base';
+
+// utils
 import { goBack } from '../../utils/navigationService';
-import { moderateScale } from '../../utils/scale';
+
+import { theme } from '../../constants';
 
 import TouchableView from '../TouchableView';
 
 const ContainerView = styled.View`
   flex-direction: row;
   flex: 1;
-`;
-
-const ImageIcon = styled.Image`
-  width: ${moderateScale(10)};
-  height: ${moderateScale(18)};
 `;
 
 class LeftBackIcon extends React.PureComponent {
@@ -33,14 +31,18 @@ class LeftBackIcon extends React.PureComponent {
         <TouchableView
           onPress={onPress || (() => goBack())}
           style={{
-            paddingLeft: moderateScale(10),
-            paddingRight: moderateScale(10),
+            paddingLeft: theme.moderateScale(10),
+            paddingRight: theme.moderateScale(10),
             justifyContent: 'center',
           }}
         >
-          <ImageIcon
-            source={require('../../assets/img/back.png')}
-            resizeMode="contain"
+          <Icon
+            name="ios-arrow-back"
+            style={{
+              color: theme.whiteColor,
+              marginLeft: theme.moderateScale(8),
+              fontSize: theme.moderateScale(23),
+            }}
           />
         </TouchableView>
       </ContainerView>

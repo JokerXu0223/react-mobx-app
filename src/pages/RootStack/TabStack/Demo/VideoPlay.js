@@ -14,6 +14,7 @@ import Orientation from 'react-native-orientation';
 
 // static source
 import logoIcon from '../../../../assets/img/test/logo.jpg';
+import LeftBackIcon from '../../../../components/Layout/LeftBackIcon';
 // import hashVideo from '../../../../assets/video/hashcloud_video.mp4';
 
 const screenWidth = Dimensions.get('window').width;
@@ -255,14 +256,10 @@ class VideoPlayScreen extends Component {
         videoCover,
       },
       props: {
-        navigation: {
-          state: {
-            params = {},
-          } = {},
-        },
+        navigation,
       },
     } = this;
-    const { videoUrl } = params;
+    const videoUrl = navigation.getParam('videoUrl');
     return (
       <Container
         onLayout={this.onLayout}
@@ -375,9 +372,13 @@ class VideoPlayScreen extends Component {
   }
 }
 
-// { navigation }
-VideoPlayScreen.navigationOptions = () => ({
+VideoPlayScreen.navigationOptions = ({ navigation }) => ({
   title: '视频播放',
+  headerLeft: (
+    <LeftBackIcon
+      onPress={() => navigation.goBack()}
+    />
+  ),
 });
 
 VideoPlayScreen.defaultProps = {};
@@ -388,6 +389,7 @@ VideoPlayScreen.propTypes = {
     goBack: PropTypes.func,
     navigate: PropTypes.func,
     setParams: PropTypes.func,
+    getParam: PropTypes.func,
     state: PropTypes.shape({
       key: PropTypes.string,
       routeName: PropTypes.string,
