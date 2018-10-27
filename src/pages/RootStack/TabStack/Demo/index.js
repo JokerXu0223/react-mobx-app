@@ -15,8 +15,8 @@ import DiscoverScreen from './Discover';
 import DownloadScreen from './Download';
 
 // static source
-import demoIcon from '../../../../assets/img/tabbar/discover.png';
-import demoActiveIcon from '../../../../assets/img/tabbar/discover-blue.png';
+import demoIcon from '../../../../assets/images/tabbar/discover.png';
+import demoActiveIcon from '../../../../assets/images/tabbar/discover-blue.png';
 import { DefaultHeaderView } from '../../../../components/Layout/Styles';
 
 const RouteConfig = {

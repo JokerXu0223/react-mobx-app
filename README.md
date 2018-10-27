@@ -19,9 +19,10 @@ npm 5.0+(v6.4.1)
 ```html
 |--src              Source dir
   |--assets         Static source
-    |--img          
+    |--images          
     |--fonts        Maybe you need             
   |--components     Only common & Layout
+  |--config      
   |--constants      
   |--models         Mobx store
   |--pages          Container & Self component

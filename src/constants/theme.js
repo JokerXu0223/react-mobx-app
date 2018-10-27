@@ -10,6 +10,7 @@ import { getHeaderHeight, getHeaderPadding } from '../utils/device';
 export default {
   primaryColor: '#5983F0',
   whiteColor: '#FFFFFF',
+  blackColor: '#000000',
   headerBackgroundColor: '#333333',
   dangerColor: '#D32E2B',
   headerColor: '#ffffff',

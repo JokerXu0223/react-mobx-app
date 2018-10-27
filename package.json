@@ -29,6 +29,7 @@
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "autobind-decorator": "^2.1.0",
+    "axios": "^0.18.0",
     "js-root-toast": "^0.1.4",
     "mobx": "^4.5.2",
     "mobx-react": "5.1.0",

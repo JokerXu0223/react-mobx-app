@@ -6,384 +6,430 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Dimensions, Image, Text, Slider, TouchableWithoutFeedback, TouchableOpacity, Button, StyleSheet } from 'react-native';
+import styled from 'styled-components';
+import { View, Text, TouchableOpacity } from 'react-native';
 import Video from 'react-native-video';
-// import styled from 'styled-components';
-import { Container } from 'native-base';
 import Orientation from 'react-native-orientation';
+import { Icon } from 'native-base';
 
-// static source
-import logoIcon from '../../../../assets/img/test/logo.jpg';
-import LeftBackIcon from '../../../../components/Layout/LeftBackIcon';
-// import hashVideo from '../../../../assets/video/hashcloud_video.mp4';
+// utils
+import Toast from '../../../../utils/toast';
+import { isAndroid, deviceWidth, deviceHeight } from '../../../../utils/device';
 
-const screenWidth = Dimensions.get('window').width;
+// constants
+import { theme } from '../../../../constants';
 
-function formatTime(second) {
-  const h = 0;
-  let i = 0;
-  let s = parseInt(second, 10);
-  if (s > 60) {
-    i = parseInt(s / 60, 10);
-    s = parseInt(s % 60, 10);
-  }
-  // 补零
-  const zero = (v) => {
-    return (v >> 0) < 10 ? `0${v}` : v;
-  };
-  return [zero(h), zero(i), zero(s)].join(':');
+// components
+import CommStatusBar from '../../../../components/Layout/CommStatusBar';
+
+const deviceInfo = {
+  deviceWidth,
+  deviceHeight,
+};
+
+const playerHeight = 250;
+
+const portrait = 'PORTRAIT';
+
+// format media time
+function formatMediaTime(duration) {
+  let min = Math.floor(duration / 60);
+  let second = duration - (min * 60);
+  min = min >= 10 ? min : `0${min}`;
+  second = second >= 10 ? second : `0${second}`;
+  return `${min}:${second}`;
 }
 
-const styles = StyleSheet.create({
-  playButton: {
-    width: 50,
-    height: 50,
-  },
-  playControl: {
-    width: 24,
-    height: 24,
-    marginLeft: 15,
-  },
-  shrinkControl: {
-    width: 15,
-    height: 15,
-    marginRight: 15,
-  },
-  time: {
-    fontSize: 12,
-    color: 'white',
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  control: {
-    flexDirection: 'row',
-    height: 44,
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-  },
-});
+const ContainerView = styled.TouchableOpacity.attrs({
+  activeOpacity: 1,
+})`
+  justify-content: space-between;
+`;
 
-class VideoPlayScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      // videoUrl: 'file://assets-library://asset/asset.mp4?id=C4254C99-39B8-47F4-8C88-A1A3866A904C&ext=mp4',
-      // videoUrl: 'https://hashcloudmining.com//hashcloud_video_grey.mp4',
-      videoCover: logoIcon,
-      videoWidth: screenWidth,
-      videoHeight: (screenWidth * 9) / 16, // 默认16：9的宽高比
-      showVideoCover: true, // 是否显示视频封面
-      showVideoControl: false, // 是否显示视频控制组件
-      isPlaying: false, // 视频是否正在播放
-      currentTime: 0, // 视频当前播放的时间
-      duration: 0, // 视频的总时长
-      isFullScreen: false, // 当前是否全屏显示
-      playFromBeginning: false, // 是否从头开始播放
-    };
-  }
+const VideoView = styled(Video)`
+  position: absolute;
+  top: 44px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+`;
 
-  // / 屏幕旋转时宽高会发生变化，可以在onLayout的方法中做处理，比监听屏幕旋转更加及时获取宽高变化
-  onLayout = (event) => {
-    // 获取根View的宽高
-    const { width, height } = event.nativeEvent.layout;
-    console.log(`通过onLayout得到的宽度：${width}`);
-    console.log(`通过onLayout得到的高度：${height}`);
+// nav styles
+const NavContainerView = styled.View`
+  height: ${theme.moderateScale(44)};
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 ${theme.moderateScale(10)}px;
+  background-color: ${theme.blackColor};
+`;
 
-    // 一般设备横屏下都是宽大于高，这里可以用这个来判断横竖屏
-    const isLandscape = (width > height);
-    if (isLandscape) {
-      this.setState({
-        videoWidth: width,
-        videoHeight: height,
-        isFullScreen: true,
-      });
-    } else {
-      this.setState({
-        videoWidth: width,
-        videoHeight: (width * 9) / 16,
-        isFullScreen: false,
-      });
-    }
-    Orientation.unlockAllOrientations();
+const NavLeftView = styled.View`
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+`;
+
+const NavLeftIconView = styled.TouchableOpacity`
+`;
+
+const NavLeftText = styled.Text`
+  color: ${theme.whiteColor};
+  margin-left: ${theme.moderateScale(10)};
+`;
+
+const NavRightView = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const NavRightIconView = styled.TouchableOpacity`
+  margin: 0 ${theme.moderateScale(5)}px;
+`;
+
+const LockIconView = styled.TouchableOpacity`
+  margin: 0 ${theme.moderateScale(10)}px;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+`;
+
+// toolBar styles
+const ToolBarView = styled.View`
+  background-color: ${theme.blackColor};
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 ${theme.moderateScale(10)}px;
+  margin-top: ${theme.moderateScale(10)};
+  height: ${theme.moderateScale(30)};
+`;
+
+const ProgressView = styled.View`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 ${theme.moderateScale(10)}px;
+`;
+
+const TimeText = styled.Text`
+  min-width: ${theme.moderateScale(35)};
+  color: ${theme.whiteColor};
+  font-size: ${theme.moderateScale(12)};
+`;
+
+const SliderView = styled.Slider`
+  flex: 1;
+  margin: 0 ${theme.moderateScale(5)}px;
+  height: ${theme.moderateScale(20)};
+`;
+
+class VideoPlay extends Component {
+  static playerRef = null;
+
+  state = {
+    rate: 1,
+    slideValue: 0.00,
+    currentTime: 0.00,
+    duration: 0.00,
+    paused: false,
+    playIcon: 'ios-pause',
+    isTouchedScreen: true,
+    isLock: false,
+    orientation: null,
   };
 
-  // / -------Video组件回调事件-------
-  onLoadStart = () => {
-    console.log('视频开始加载');
-  };
-
-  onBuffering = () => {
-    console.log('视频缓冲中...');
-  };
-
-  onLoaded = (data) => {
-    console.log('视频加载完成');
+  componentWillMount() {
+    const init = Orientation.getInitialOrientation();
     this.setState({
-      duration: data.duration,
-    });
-  };
-
-  onProgressChanged = (data) => {
-    console.log('视频进度更新');
-    if (this.state.isPlaying) {
-      this.setState({
-        currentTime: data.currentTime,
-      });
-    }
-  };
-
-  onPlayEnd = () => {
-    console.log('视频播放结束');
-    this.setState({
-      currentTime: 0,
-      isPlaying: false,
-      playFromBeginning: true,
-    });
-  };
-
-  onPlayError = () => {
-    console.log('视频播放失败');
-  };
-
-  // /-------控件点击事件-------
-
-  // / 点击了播放器正中间的播放按钮
-  onPressPlayButton() {
-    const isPlay = !this.state.isPlaying;
-    this.setState({
-      isPlaying: isPlay,
-      showVideoCover: false,
-    });
-    if (this.state.playFromBeginning) {
-      this.videoPlayer.seek(0);
-      this.setState({
-        playFromBeginning: false,
-      });
-    }
-  }
-
-  // / 点击了工具栏上的播放按钮
-  onControlPlayPress() {
-    this.onPressPlayButton();
-  }
-
-  // / 点击了工具栏上的全屏按钮
-  onControlShrinkPress() {
-    if (this.state.isFullScreen) {
-      Orientation.lockToPortrait();
-    } else {
-      Orientation.lockToLandscape();
-    }
-  }
-
-  // / 进度条值改变
-  onSliderValueChanged(currentTime) {
-    this.videoPlayer.seek(currentTime);
-    if (this.state.isPlaying) {
-      this.setState({
-        currentTime,
-      });
-    } else {
-      this.setState({
-        currentTime,
-        isPlaying: true,
-        showVideoCover: false,
-      });
-    }
-  }
-
-  // / 控制播放器工具栏的显示和隐藏
-  hideControl() {
-    if (this.state.showVideoControl) {
-      this.setState({
-        showVideoControl: false,
-      });
-    } else {
-      this.setState(
-        {
-          showVideoControl: true,
-        },
-        // 5秒后自动隐藏工具栏
-        () => {
-          setTimeout(() => {
-            this.setState({
-              showVideoControl: false,
-            });
-          }, 5000);
-        },
-      );
-    }
-  }
-
-  // / -------外部调用事件方法-------
-
-  // /播放视频，提供给外部调用
-  playVideo() {
-    this.setState({
-      isPlaying: true,
-      showVideoCover: false,
+      orientation: init,
     });
   }
 
-  // / 暂停播放，提供给外部调用
-  pauseVideo() {
-    this.setState({
-      isPlaying: false,
-    });
+  componentDidMount() {
+    Orientation.addOrientationListener(this.handleUpdateOrientation);
+    // Orientation.addSpecificOrientationListener(this.handleUpdateSpecificOrientation);
   }
 
-  // / 切换视频并可以指定视频开始播放的时间，提供给外部调用
-  switchVideo(videoURL, seekTime) {
-    this.setState({
-      // videoUrl: videoURL,
-      currentTime: seekTime,
-      isPlaying: true,
-      showVideoCover: false,
-    });
-    this.videoPlayer.seek(seekTime);
+  componentWillUnmount() {
+    Orientation.removeOrientationListener(this.handleUpdateOrientation);
+    // Orientation.removeSpecificOrientationListener(this.handleUpdateSpecificOrientation);
   }
 
-  render() {
+  // video func
+  onLoadStart = (data) => {
+    console.log('loadStart', data);
+  };
+  onLoad = (duration) => {
+    this.setState({ duration: duration.duration });
+  };
+  onProgress = (data) => {
+    const sliderValue = parseInt(this.state.currentTime, 10);
+    this.setState({
+      slideValue: sliderValue,
+      currentTime: data.currentTime,
+    });
+  };
+  onEnd = () => {
+    this.playerRef.seek(0);
+  };
+  onError = () => {
+    Toast.showError('播放器报错啦！');
+  };
+  onBuffer = (data) => {
+    console.log('onBuffer', data);
+  };
+  onTimedMetadata = (data) => {
+    console.log('onTimedMetadata', data);
+  };
+
+  // Orientation
+  handleUpdateOrientation = (orientation) => {
+    this.setState({ orientation });
+  };
+  // handleUpdateSpecificOrientation = (specificOrientation) => {
+  //   this.setState({ specificOrientation });
+  // };
+
+  play = () => {
+    this.setState({
+      paused: !this.state.paused,
+      playIcon: this.state.paused ? 'ios-pause' : 'ios-play',
+    });
+  };
+
+  renderNavContainer = () => {
     const {
       state: {
-        videoWidth,
-        videoHeight,
-        isPlaying,
-        showVideoCover,
-        videoCover,
+        isLock,
+        orientation,
       },
       props: {
         navigation,
       },
     } = this;
-    const videoUrl = navigation.getParam('videoUrl');
+    const {
+      videoTitle: title,
+    } = navigation.getParam('video') || {};
+    if (isLock) {
+      return (
+        <NavContainerView />
+      );
+    }
+    const isPortrait = orientation === portrait;
     return (
-      <Container
-        onLayout={this.onLayout}
-      >
-        <View
-          style={{
-            width: videoWidth,
-            height: videoHeight,
-            backgroundColor: '#000000',
-          }}
-        >
-          <Video
-            ref={(ref) => { this.videoPlayer = ref; }}
-            source={{ uri: videoUrl }}
-            rate={1.0}
-            volume={1.0}
-            muted={false}
-            paused={!isPlaying}
-            resizeMode="contain"
-            playWhenInactive={false}
-            playInBackground={false}
-            ignoreSilentSwitch="ignore"
-            progressUpdateInterval={250.0}
-            onLoadStart={this.onLoadStart}
-            onLoad={this.onLoaded}
-            onProgress={this.onProgressChanged}
-            onEnd={this.onPlayEnd}
-            onError={this.onPlayError}
-            onBuffer={this.onBuffering}
-            style={{
-              width: videoWidth,
-              height: videoHeight,
-            }}
-          />
-          {
-            showVideoCover ?
-              <Image
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: videoWidth,
-                  height: videoHeight,
-                }}
-                resizeMode="cover"
-                source={videoCover}
-              /> : null
-          }
-          <TouchableWithoutFeedback onPress={() => { this.hideControl(); }}>
-            <View
+      <NavContainerView>
+        <NavLeftView>
+          <NavLeftIconView
+            onPress={
+              isPortrait ?
+                () => navigation.goBack()
+                :
+                Orientation.lockToPortrait
+            }
+          >
+            <Icon
+              name="ios-close"
               style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: videoWidth,
-                height: videoHeight,
-                backgroundColor: isPlaying ? 'transparent' : 'rgba(0, 0, 0, 0.2)',
-                alignItems: 'center',
-                justifyContent: 'center',
+                color: theme.whiteColor,
+                fontSize: theme.moderateScale(25),
+              }}
+            />
+          </NavLeftIconView>
+          <NavLeftText>{title}</NavLeftText>
+        </NavLeftView>
+        <NavRightView>
+          <NavRightIconView
+            style={{
+              borderColor: theme.whiteColor,
+              borderWidth: 0.5,
+              padding: 3,
+            }}
+            onPress={() => alert('开启弹幕！')}
+          >
+            <Text
+              style={{
+                color: theme.whiteColor,
+                fontSize: 12,
               }}
             >
-              {
-                this.state.isPlaying ? null :
-                <TouchableWithoutFeedback onPress={() => { this.onPressPlayButton(); }}>
-                  <Image
-                    style={styles.playButton}
-                    source={require('../../../../assets/img/video/icon_video_play.png')}
-                  />
-                </TouchableWithoutFeedback>
-              }
-            </View>
-          </TouchableWithoutFeedback>
-          {
-            this.state.showVideoControl ?
-              <View style={[styles.control, { width: this.state.videoWidth }]}>
-                <TouchableOpacity activeOpacity={0.3} onPress={() => { this.onControlPlayPress(); }}>
-                  <Image
-                    style={styles.playControl}
-                    source={this.state.isPlaying ? require('../../../../assets/img/video/icon_control_pause.png') : require('../../../../assets/img/video/icon_control_play.png')}
-                  />
-                </TouchableOpacity>
-                <Text style={styles.time}>{formatTime(this.state.currentTime)}</Text>
-                <Slider
-                  style={{ flex: 1 }}
-                  maximumTrackTintColor="#999999"
-                  minimumTrackTintColor="#00c06d"
-                  thumbImage={require('../../../../assets/img/video/icon_control_slider.png')}
-                  value={this.state.currentTime}
-                  minimumValue={0}
-                  maximumValue={this.state.duration}
-                  onValueChange={(currentTime) => { this.onSliderValueChanged(currentTime); }}
+              弹
+            </Text>
+          </NavRightIconView>
+          <NavRightIconView
+            onPress={() => alert('下载！')}
+          >
+            <Icon
+              name="md-download"
+              style={{
+                color: theme.whiteColor,
+                fontSize: theme.moderateScale(20),
+              }}
+            />
+          </NavRightIconView>
+          <NavRightIconView
+            onPress={() => alert('设置画面！')}
+          >
+            <Icon
+              name="ios-aperture"
+              style={{
+                color: theme.whiteColor,
+                fontSize: theme.moderateScale(20),
+              }}
+            />
+          </NavRightIconView>
+        </NavRightView>
+      </NavContainerView>
+    );
+  };
+
+  render() {
+    const {
+      state: {
+        orientation,
+        isLock,
+        rate,
+        paused,
+        playIcon,
+      },
+      props: {
+        navigation,
+      },
+    } = this;
+    const {
+      url,
+    } = navigation.getParam('video') || {};
+    if (!url) {
+      return (
+        <View />
+      );
+    }
+    const isPortrait = orientation === portrait;
+    return (
+      <ContainerView
+        style={{
+          height: isPortrait ? playerHeight : deviceInfo.deviceWidth,
+        }}
+        onPress={() => this.setState({ isTouchedScreen: !this.state.isTouchedScreen })}
+      >
+        <CommStatusBar />
+        <VideoView
+          source={{ uri: url }}
+          innerRef={(ref) => { this.playerRef = ref; }}
+          rate={rate}
+          volume={1.0}
+          muted={false}
+          paused={paused}
+          resizeMode="cover"
+          repeat
+          playInBackground={false}
+          playWhenInactive={false}
+          ignoreSilentSwitch="ignore"
+          progressUpdateInterval={250.0}
+          onLoadStart={this.onLoadStart}
+          onLoad={this.onLoad}
+          onProgress={this.onProgress}
+          onEnd={this.onEnd}
+          onError={this.onError}
+          onBuffer={this.onBuffer}
+          onTimedMetadata={this.onTimedMetadata}
+        />
+        {this.renderNavContainer()}
+        {
+          !isPortrait ?
+            <LockIconView
+              onPress={() => this.setState({ isLock: !this.state.isLock })}
+            >
+              <Icon
+                name={`${isLock ? 'ios-checkmark-circle' : 'ios-checkmark-circle-outline'}`}
+                style={{
+                  color: theme.whiteColor,
+                  fontSize: theme.moderateScale(20),
+                }}
+              />
+            </LockIconView> : null
+        }
+        {
+          // this.state.isTouchedScreen && !isLock ?
+          !isLock ?
+            <ToolBarView
+              style={{
+                marginBottom: (!isAndroid || isPortrait) ? 0 : 25 }}
+            >
+              <TouchableOpacity onPress={() => this.play()}>
+                <Icon
+                  name={playIcon}
+                  style={{
+                    color: theme.whiteColor,
+                    fontSize: theme.moderateScale(18),
+                  }}
                 />
-                <Text style={styles.time}>{formatTime(this.state.duration)}</Text>
-                <TouchableOpacity activeOpacity={0.3} onPress={() => { this.onControlShrinkPress(); }}>
-                  <Image
-                    style={styles.shrinkControl}
-                    source={this.state.isFullScreen ? require('../../../../assets/img/video/icon_control_shrink_screen.png') : require('../../../../assets/img/video/icon_control_full_screen.png')}
-                  />
-                </TouchableOpacity>
-              </View> : null
-          }
-        </View>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Button title="开始播放" onPress={() => { this.playVideo(); }} />
-          <Button title="暂停播放" onPress={() => { this.pauseVideo(); }} />
-          <Button title="切换视频" onPress={() => { this.switchVideo('http://124.129.157.208:8810/SD/zhishidian/grade_8_1/wuli_shu/01.mp4', 0); }} />
-        </View>
-      </Container>
+              </TouchableOpacity>
+              <ProgressView>
+                <TimeText>
+                  {formatMediaTime(Math.floor(this.state.currentTime))}
+                </TimeText>
+                <SliderView
+                  value={this.state.slideValue}
+                  maximumValue={this.state.duration}
+                  minimumTrackTintColor={theme.primaryColor}
+                  maximumTrackTintColor={theme.textGrayColor}
+                  step={1}
+                  onValueChange={value => this.setState({ currentTime: value })}
+                  onSlidingComplete={value => this.playerRef.seek(value)}
+                />
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: 35 }}>
+                  <Text
+                    style={{
+                      color: theme.whiteColor,
+                      fontSize: 12,
+                    }}
+                  >
+                    {formatMediaTime(Math.floor(this.state.duration))}
+                  </Text>
+                </View>
+              </ProgressView>
+              {
+                isPortrait ?
+                  <TouchableOpacity onPress={Orientation.lockToLandscapeLeft}>
+                    <Icon
+                      name="ios-expand"
+                      style={{
+                        color: theme.whiteColor,
+                        fontSize: theme.moderateScale(18),
+                      }}
+                    />
+                  </TouchableOpacity> :
+                  <TouchableOpacity onPress={Orientation.lockToPortrait}>
+                    <Icon
+                      name="ios-contract"
+                      style={{
+                        color: theme.whiteColor,
+                        fontSize: theme.moderateScale(18),
+                      }}
+                    />
+                  </TouchableOpacity>
+              }
+            </ToolBarView> : <View style={{ height: 40 }} />
+        }
+      </ContainerView>
     );
   }
 }
 
-VideoPlayScreen.navigationOptions = ({ navigation }) => ({
-  title: '视频播放',
-  headerLeft: (
-    <LeftBackIcon
-      onPress={() => navigation.goBack()}
-    />
-  ),
-});
+// { navigation }
+VideoPlay.navigationOptions = () => {
+  return {
+    header: null,
+  };
+};
 
-VideoPlayScreen.defaultProps = {};
+VideoPlay.defaultProps = {};
 
-VideoPlayScreen.propTypes = {
+VideoPlay.propTypes = {
   navigation: PropTypes.shape({
     dispatch: PropTypes.func,
     goBack: PropTypes.func,
@@ -398,4 +444,4 @@ VideoPlayScreen.propTypes = {
   }).isRequired,
 };
 
-export default VideoPlayScreen;
+export default VideoPlay;

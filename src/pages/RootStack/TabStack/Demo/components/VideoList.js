@@ -44,19 +44,20 @@ const VideoItemView = styled.View`
 const VideoDeleteButton = styled.TouchableOpacity`
    align-items: center;
    justify-content: center;
-   min-width: ${theme.moderateScale(60)};
+   padding: 0 ${theme.moderateScale(10)}px;
 `;
 
 const VideoDeleteText = styled.Text`
    color: ${theme.primaryColor};
 `;
 
-const VideoList = ({
-  videoList,
-  onPlayItemReq,
-  onDeleteItemReq,
-}) => {
-  function renderVideoItem() {
+class VideoList extends React.PureComponent {
+  renderVideoItem = () => {
+    const {
+      videoList,
+      onPlayItemReq,
+      onDeleteItemReq,
+    } = this.props;
     console.log(toJS(videoList));
     if (!(videoList.length)) return null;
     return videoList.map((_, i) => {
@@ -81,13 +82,15 @@ const VideoList = ({
         </VideoItem>
       );
     });
+  };
+  render() {
+    return (
+      <ContainerView>
+        {this.renderVideoItem()}
+      </ContainerView>
+    );
   }
-  return (
-    <ContainerView>
-      {renderVideoItem()}
-    </ContainerView>
-  );
-};
+}
 
 VideoList.defaultProps = {
   onPlayItemReq: () => null,
