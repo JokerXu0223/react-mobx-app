@@ -7,6 +7,7 @@
 import React from 'react';
 import { BackHandler } from 'react-native';
 import { Provider } from 'mobx-react';
+import SplashScreen from 'react-native-splash-screen';
 import RootStore from './models';
 
 import Navigator from './pages';
@@ -14,6 +15,7 @@ import { goBack, registerTopNavigator } from './utils/navigationService';
 
 class App extends React.Component {
   componentDidMount() {
+    SplashScreen.hide();
     BackHandler.addEventListener('hardwareBackPress', this.onPressAndroidBack);
   }
 

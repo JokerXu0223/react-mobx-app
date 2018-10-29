@@ -5,8 +5,10 @@
  * @author JUSTIN XU
  */
 export default {
-  // initial loading screen
+  // initial loading Stack
   authLoading: 'app.authLoading',
+  // beginner guide Stack
+  beginnerGuide: 'app.beginnerGuide',
   // Auth Stack
   auth: 'app.auth',
   signIn: 'app.auth.signIn',

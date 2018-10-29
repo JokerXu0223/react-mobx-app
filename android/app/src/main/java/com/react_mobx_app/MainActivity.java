@@ -1,5 +1,6 @@
 package com.react_mobx_app;
 
+import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import org.devio.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {
@@ -31,6 +33,7 @@ public class MainActivity extends ReactActivity {
 
   @Override
   public void onCreate (Bundle savedInstanceState) {
+    SplashScreen.show(this, R.style.SplashScreenTheme);
     super.onCreate(savedInstanceState);
     // Checking permissions on init
     checkPerms();
