@@ -10,11 +10,11 @@ import styled from 'styled-components';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Video from 'react-native-video';
 import Orientation from 'react-native-orientation';
-import { Icon } from 'native-base';
+import { Container, Icon } from 'native-base';
 
 // utils
+import { isIphoneX, deviceHeight, getVideoHeaderPadding, getVideoFooterBottom } from '../../../../utils/device';
 import Toast from '../../../../utils/toast';
-import { isAndroid, deviceWidth, deviceHeight } from '../../../../utils/device';
 
 // constants
 import { theme } from '../../../../constants';
@@ -22,14 +22,7 @@ import { theme } from '../../../../constants';
 // components
 import CommStatusBar from '../../../../components/Layout/CommStatusBar';
 
-const deviceInfo = {
-  deviceWidth,
-  deviceHeight,
-};
-
-const playerHeight = 250;
-
-const portrait = 'PORTRAIT';
+const navHeight = 44;
 
 // format media time
 function formatMediaTime(duration) {
@@ -44,11 +37,13 @@ const ContainerView = styled.TouchableOpacity.attrs({
   activeOpacity: 1,
 })`
   justify-content: space-between;
+  padding-top: ${props => props.paddingTop}px;
+  background-color: ${theme.blackColor};
 `;
 
 const VideoView = styled(Video)`
   position: absolute;
-  top: 44px;
+  top: ${props => props.paddingTop}px;
   left: 0;
   bottom: 0;
   right: 0;
@@ -56,12 +51,11 @@ const VideoView = styled(Video)`
 
 // nav styles
 const NavContainerView = styled.View`
-  height: ${theme.moderateScale(44)};
+  padding: 0 ${theme.moderateScale(10)}px;
+  height: ${navHeight}px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0 ${theme.moderateScale(10)}px;
-  background-color: ${theme.blackColor};
 `;
 
 const NavLeftView = styled.View`
@@ -98,13 +92,13 @@ const LockIconView = styled.TouchableOpacity`
 
 // toolBar styles
 const ToolBarView = styled.View`
-  background-color: ${theme.blackColor};
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 0 ${theme.moderateScale(10)}px;
   margin-top: ${theme.moderateScale(10)};
-  height: ${theme.moderateScale(30)};
+  padding-bottom: ${props => props.paddingBottom}px;
+  height: ${props => theme.moderateScale(30) + props.paddingBottom};
 `;
 
 const ProgressView = styled.View`
@@ -131,7 +125,6 @@ class VideoPlay extends Component {
   static playerRef = null;
 
   state = {
-    rate: 1,
     slideValue: 0.00,
     currentTime: 0.00,
     duration: 0.00,
@@ -139,25 +132,34 @@ class VideoPlay extends Component {
     playIcon: 'ios-pause',
     isTouchedScreen: true,
     isLock: false,
-    orientation: null,
+    videoWidth: deviceHeight,
+    videoHeight: 280, // 默认16：9的宽高比
   };
 
-  componentWillMount() {
-    const init = Orientation.getInitialOrientation();
-    this.setState({
-      orientation: init,
-    });
-  }
+  // / 屏幕旋转时宽高会发生变化，可以在onLayout的方法中做处理，比监听屏幕旋转更加及时获取宽高变化
+  onLayout = (event) => {
+    // 获取根View的宽高
+    const { width, height } = event.nativeEvent.layout;
+    console.log(`通过onLayout得到的宽度：${width}`);
+    console.log(`通过onLayout得到的高度：${height}`);
 
-  componentDidMount() {
-    Orientation.addOrientationListener(this.handleUpdateOrientation);
-    // Orientation.addSpecificOrientationListener(this.handleUpdateSpecificOrientation);
-  }
-
-  componentWillUnmount() {
-    Orientation.removeOrientationListener(this.handleUpdateOrientation);
-    // Orientation.removeSpecificOrientationListener(this.handleUpdateSpecificOrientation);
-  }
+    // 一般设备横屏下都是宽大于高，这里可以用这个来判断横竖屏
+    const isLandscape = (width > height);
+    if (isLandscape) {
+      this.setState({
+        isFullScreen: true,
+        videoWidth: width,
+        videoHeight: height,
+      });
+    } else {
+      this.setState({
+        isFullScreen: false,
+        videoWidth: width,
+        videoHeight: (width * 9) / 16,
+      });
+    }
+    Orientation.unlockAllOrientations();
+  };
 
   // video func
   onLoadStart = (data) => {
@@ -186,14 +188,6 @@ class VideoPlay extends Component {
     console.log('onTimedMetadata', data);
   };
 
-  // Orientation
-  handleUpdateOrientation = (orientation) => {
-    this.setState({ orientation });
-  };
-  // handleUpdateSpecificOrientation = (specificOrientation) => {
-  //   this.setState({ specificOrientation });
-  // };
-
   play = () => {
     this.setState({
       paused: !this.state.paused,
@@ -205,7 +199,7 @@ class VideoPlay extends Component {
     const {
       state: {
         isLock,
-        orientation,
+        isFullScreen,
       },
       props: {
         navigation,
@@ -219,13 +213,12 @@ class VideoPlay extends Component {
         <NavContainerView />
       );
     }
-    const isPortrait = orientation === portrait;
     return (
       <NavContainerView>
         <NavLeftView>
           <NavLeftIconView
             onPress={
-              isPortrait ?
+              !isFullScreen ?
                 () => navigation.goBack()
                 :
                 Orientation.lockToPortrait
@@ -289,11 +282,15 @@ class VideoPlay extends Component {
   render() {
     const {
       state: {
-        orientation,
+        isFullScreen,
         isLock,
-        rate,
         paused,
         playIcon,
+        videoWidth,
+        videoHeight,
+        currentTime,
+        slideValue,
+        duration,
       },
       props: {
         navigation,
@@ -307,125 +304,138 @@ class VideoPlay extends Component {
         <View />
       );
     }
-    const isPortrait = orientation === portrait;
+    const paddingTop = getVideoHeaderPadding(isFullScreen);
+    console.log(paddingTop);
     return (
-      <ContainerView
-        style={{
-          height: isPortrait ? playerHeight : deviceInfo.deviceWidth,
-        }}
-        onPress={() => this.setState({ isTouchedScreen: !this.state.isTouchedScreen })}
+      <Container
+        onLayout={this.onLayout}
       >
         <CommStatusBar />
-        <VideoView
-          source={{ uri: url }}
-          innerRef={(ref) => { this.playerRef = ref; }}
-          rate={rate}
-          volume={1.0}
-          muted={false}
-          paused={paused}
-          resizeMode="cover"
-          repeat
-          playInBackground={false}
-          playWhenInactive={false}
-          ignoreSilentSwitch="ignore"
-          progressUpdateInterval={250.0}
-          onLoadStart={this.onLoadStart}
-          onLoad={this.onLoad}
-          onProgress={this.onProgress}
-          onEnd={this.onEnd}
-          onError={this.onError}
-          onBuffer={this.onBuffer}
-          onTimedMetadata={this.onTimedMetadata}
-        />
-        {this.renderNavContainer()}
-        {
-          !isPortrait ?
-            <LockIconView
-              onPress={() => this.setState({ isLock: !this.state.isLock })}
-            >
-              <Icon
-                name={`${isLock ? 'ios-checkmark-circle' : 'ios-checkmark-circle-outline'}`}
-                style={{
-                  color: theme.whiteColor,
-                  fontSize: theme.moderateScale(20),
-                }}
-              />
-            </LockIconView> : null
-        }
-        {
-          // this.state.isTouchedScreen && !isLock ?
-          !isLock ?
-            <ToolBarView
-              style={{
-                marginBottom: (!isAndroid || isPortrait) ? 0 : 25 }}
-            >
-              <TouchableOpacity onPress={() => this.play()}>
+        <ContainerView
+          style={{
+            width: videoWidth,
+            height: isFullScreen ? videoHeight : videoHeight + navHeight + paddingTop,
+          }}
+          paddingTop={paddingTop}
+          onPress={() => this.setState({ isTouchedScreen: !this.state.isTouchedScreen })}
+        >
+          <VideoView
+            source={{ uri: url }}
+            innerRef={(ref) => { this.playerRef = ref; }}
+            rate={1.0}
+            volume={1.0}
+            muted={false}
+            paused={paused}
+            resizeMode="cover"
+            repeat
+            playInBackground={false}
+            playWhenInactive={false}
+            ignoreSilentSwitch="ignore"
+            progressUpdateInterval={250.0}
+            onLoadStart={this.onLoadStart}
+            onLoad={this.onLoad}
+            onProgress={this.onProgress}
+            onEnd={this.onEnd}
+            onError={this.onError}
+            onBuffer={this.onBuffer}
+            onTimedMetadata={this.onTimedMetadata}
+            style={{
+              width: videoWidth,
+              height: isFullScreen ? videoHeight - paddingTop - getVideoFooterBottom() : videoHeight,
+            }}
+            top={isFullScreen ? paddingTop : navHeight + paddingTop}
+          />
+          {this.renderNavContainer()}
+          {
+            isFullScreen ?
+              <LockIconView
+                onPress={() => this.setState({ isLock: !this.state.isLock })}
+              >
                 <Icon
-                  name={playIcon}
+                  name={`${isLock ? 'ios-checkmark-circle' : 'ios-checkmark-circle-outline'}`}
                   style={{
                     color: theme.whiteColor,
-                    fontSize: theme.moderateScale(18),
+                    fontSize: theme.moderateScale(20),
                   }}
                 />
-              </TouchableOpacity>
-              <ProgressView>
-                <TimeText>
-                  {formatMediaTime(Math.floor(this.state.currentTime))}
-                </TimeText>
-                <SliderView
-                  value={this.state.slideValue}
-                  maximumValue={this.state.duration}
-                  minimumTrackTintColor={theme.primaryColor}
-                  maximumTrackTintColor={theme.textGrayColor}
-                  step={1}
-                  onValueChange={value => this.setState({ currentTime: value })}
-                  onSlidingComplete={value => this.playerRef.seek(value)}
-                />
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: 35 }}>
-                  <Text
+              </LockIconView> : null
+          }
+          {
+            // this.state.isTouchedScreen && !isLock ?
+            !isLock ?
+              <ToolBarView
+                paddingBottom={
+                  (isIphoneX() && isFullScreen) ? 20 : 0
+                }
+              >
+                <TouchableOpacity onPress={() => this.play()}>
+                  <Icon
+                    name={playIcon}
                     style={{
                       color: theme.whiteColor,
-                      fontSize: 12,
+                      fontSize: theme.moderateScale(18),
                     }}
-                  >
-                    {formatMediaTime(Math.floor(this.state.duration))}
-                  </Text>
-                </View>
-              </ProgressView>
-              {
-                isPortrait ?
-                  <TouchableOpacity onPress={Orientation.lockToLandscapeLeft}>
-                    <Icon
-                      name="ios-expand"
+                  />
+                </TouchableOpacity>
+                <ProgressView>
+                  <TimeText>
+                    {formatMediaTime(Math.floor(currentTime))}
+                  </TimeText>
+                  <SliderView
+                    value={slideValue}
+                    maximumValue={duration}
+                    minimumTrackTintColor={theme.primaryColor}
+                    maximumTrackTintColor={theme.textGrayColor}
+                    step={1}
+                    onValueChange={value => this.setState({ currentTime: value })}
+                    onSlidingComplete={value => this.playerRef.seek(value)}
+                  />
+                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: 35 }}>
+                    <Text
                       style={{
                         color: theme.whiteColor,
-                        fontSize: theme.moderateScale(18),
+                        fontSize: 12,
                       }}
-                    />
-                  </TouchableOpacity> :
-                  <TouchableOpacity onPress={Orientation.lockToPortrait}>
-                    <Icon
-                      name="ios-contract"
-                      style={{
-                        color: theme.whiteColor,
-                        fontSize: theme.moderateScale(18),
-                      }}
-                    />
-                  </TouchableOpacity>
-              }
-            </ToolBarView> : <View style={{ height: 40 }} />
-        }
-      </ContainerView>
+                    >
+                      {formatMediaTime(Math.floor(duration))}
+                    </Text>
+                  </View>
+                </ProgressView>
+                {
+                  !isFullScreen ?
+                    <TouchableOpacity onPress={Orientation.lockToLandscapeLeft}>
+                      <Icon
+                        name="ios-expand"
+                        style={{
+                          color: theme.whiteColor,
+                          fontSize: theme.moderateScale(18),
+                        }}
+                      />
+                    </TouchableOpacity> :
+                    <TouchableOpacity onPress={Orientation.lockToPortrait}>
+                      <Icon
+                        name="ios-contract"
+                        style={{
+                          color: theme.whiteColor,
+                          fontSize: theme.moderateScale(18),
+                        }}
+                      />
+                    </TouchableOpacity>
+                }
+              </ToolBarView> : (
+                <View style={{ height: navHeight }} />
+              )
+          }
+        </ContainerView>
+      </Container>
     );
   }
 }
 
 // { navigation }
-VideoPlay.navigationOptions = () => {
-  return {
-    header: null,
-  };
-};
+VideoPlay.navigationOptions = () => ({
+  header: null,
+});
 
 VideoPlay.defaultProps = {};
 

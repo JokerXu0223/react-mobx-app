@@ -14,7 +14,7 @@ import Orientation from 'react-native-orientation';
 
 // static source
 import logoIcon from '../../../../assets/images/test/logo.jpg';
-import LeftBackIcon from '../../../../components/Layout/LeftBackIcon';
+// import LeftBackIcon from '../../../../components/Layout/LeftBackIcon';
 // import hashVideo from '../../../../assets/video/hashcloud_video.mp4';
 
 const screenWidth = Dimensions.get('window').width;
@@ -259,7 +259,9 @@ class VideoPlayScreen extends Component {
         navigation,
       },
     } = this;
-    const videoUrl = navigation.getParam('videoUrl');
+    const {
+      url: videoUrl,
+    } = navigation.getParam('video') || {};
     return (
       <Container
         onLayout={this.onLayout}
@@ -372,13 +374,9 @@ class VideoPlayScreen extends Component {
   }
 }
 
-VideoPlayScreen.navigationOptions = ({ navigation }) => ({
-  title: '视频播放',
-  headerLeft: (
-    <LeftBackIcon
-      onPress={() => navigation.goBack()}
-    />
-  ),
+// { navigation }
+VideoPlayScreen.navigationOptions = () => ({
+  header: null,
 });
 
 VideoPlayScreen.defaultProps = {};

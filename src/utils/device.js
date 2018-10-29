@@ -48,6 +48,33 @@ export function getHeaderPadding(androidBar = false) {
   }
 }
 
+// 获取视频头部填充高度
+export function getVideoHeaderPadding(isFullScreen = false) {
+  if (Platform.OS === 'android') {
+    return StatusBar.currentHeight;
+  }
+  if (Platform.OS === 'ios') {
+    if (isIphoneX()) {
+      if (isFullScreen) return 0;
+      return 44;
+    }
+    return 20;
+  }
+}
+
+// 获取视频底部填充高度
+export function getVideoFooterBottom() {
+  if (Platform.OS === 'android') {
+    return 0;
+  }
+  if (Platform.OS === 'ios') {
+    if (isIphoneX()) {
+      return 10;
+    }
+    return 0;
+  }
+}
+
 // 获取头部高度
 export function getHeaderHeight() {
   if (Platform.OS === 'android') {
