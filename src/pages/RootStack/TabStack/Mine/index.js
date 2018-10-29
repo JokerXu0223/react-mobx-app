@@ -12,8 +12,8 @@ import { routers, theme } from '../../../../constants';
 import MineScreen from './Mine';
 
 // static source
-import mineIcon from '../../../../assets/img/tabbar/mine.png';
-import mineActiveIcon from '../../../../assets/img/tabbar/mine-blue.png';
+import mineIcon from '../../../../assets/images/tabbar/mine.png';
+import mineActiveIcon from '../../../../assets/images/tabbar/mine-blue.png';
 import { DefaultHeaderView } from '../../../../components/Layout/Styles';
 
 const RouteConfig = {

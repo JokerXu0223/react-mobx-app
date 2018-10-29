@@ -1,13 +1,13 @@
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 
-let _navigator;// eslint-disable-line
+let topNavigator;
 
 export const registerTopNavigator = (navigatorRef) => {
-  _navigator = navigatorRef;
+  topNavigator = navigatorRef;
 };
 
 export const reset = (routeName, params) => {
-  _navigator.dispatch({
+  topNavigator.dispatch(StackActions.reset({
     index: 0,
     actions: [
       NavigationActions.navigate({
@@ -15,31 +15,51 @@ export const reset = (routeName, params) => {
         params,
       }),
     ],
-  });
+  }));
+};
+
+export const replace = ({
+  key,
+  newKey = null,
+  routeName,
+  params = null,
+  action = null,
+  immediate = null,
+}) => {
+  topNavigator.dispatch(StackActions.replace({
+    key,
+    newKey,
+    routeName,
+    params,
+    action,
+    immediate,
+  }));
 };
 
 export const push = (routeName, params) => {
-  _navigator.dispatch(NavigationActions.push({
+  topNavigator.dispatch(StackActions.push({
     routeName,
     params,
   }));
 };
 
 export const pop = (n) => {
-  _navigator.dispatch(NavigationActions.pop({
+  topNavigator.dispatch(StackActions.pop({
     n,
   }));
 };
 
 export const navigate = (routeName, params) => {
-  _navigator.dispatch(NavigationActions.navigate({
+  topNavigator.dispatch(NavigationActions.navigate({
     routeName,
     params,
   }));
 };
 
-export const goBack = (key) => {
-  _navigator.dispatch(NavigationActions.back({
-    key,
-  }));
+/**
+ * Notice! behavior is not always same with props.navigation.goBack in View component
+ * in the case of nested navigators, use props.navigation.goBack instead!
+ */
+export const goBack = (key = null) => {
+  topNavigator.dispatch(NavigationActions.back({ key }));
 };

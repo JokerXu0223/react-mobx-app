@@ -14,15 +14,16 @@ export default {
   // Root Stack
   root: 'app.root',
   // Root Stack -> Modals
-  search: 'app.root.search',
+  search: 'app.root.modals.search',
+  videoPlay: 'app.root.modals.videoPlay',
   // tabView
   tabView: 'app.root.tabView',
   // Root Stack -> TabView Stack -> Home
   home: 'app.root.tabView.home',
   // Root Stack -> TabView Stack -> Demo
   demo: 'app.root.tabView.demo',
+  discover: 'app.root.tabView.demo.discover',
   download: 'app.root.tabView.demo.download',
-  videoPlay: 'app.root.tabView.demo.videoPlay',
   // Root Stack -> TabView Stack -> Mine
   mine: 'app.root.tabView.mine',
 };

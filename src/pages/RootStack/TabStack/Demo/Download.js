@@ -6,91 +6,97 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CameraRoll, AsyncStorage } from 'react-native';
 import styled from 'styled-components';
-import { Button, Text } from 'native-base';
+import { observer, inject } from 'mobx-react';
 
+// constants
 import { routers } from '../../../../constants';
-
-// utils
-import { downloadFile } from '../../../../utils/downloadFile';
-import Toast from '../../../../utils/toast';
 
 // components
 import CommStatusBar from '../../../../components/Layout/CommStatusBar';
 import LeftBackIcon from '../../../../components/Layout/LeftBackIcon';
+import { ContainerScrollView, HorizontalDivider } from '../../../../components/Layout/Styles';
+import Button from '../../../../components/Button';
+import VideoList from './components/VideoList';
 
-const ContainerView = styled.View`
+const TextView = styled.Text.attrs({
+  numberOfLines: 3,
+  ellipsizeMode: 'tail',
+})`
 `;
 
-const TextView = styled.Text``;
-
+@inject(({ rootStore }) => ({
+  downloadFileStore: rootStore.downloadFileStore,
+}))
+@observer
 class Download extends React.Component {
   state = {
-    // videoList: [],
-    url: '',
   };
   componentDidMount() {
-    // this.initVideo();
-    this.initVideoUrl();
+    this.props.downloadFileStore.getVideoListReq();
   }
-  onPressDownload = async () => {
-    // downloadFile('https://btccpool.com/static/images/bg.jpg', (pro) => {
-    //   console.log('@pro', pro);
-    // });
-    // const url = await downloadFile('https://hashcloudmining.com//hashcloud_video_grey.mp4', (pro) => {
-    const url = await downloadFile('https://media.w3.org/2010/05/sintel/trailer.mp4', (pro) => {
-      console.log('@pro', pro);
-    });
-    await AsyncStorage.setItem('videoUrl', url);
-    this.setState({ url });
-  };
-  initVideoUrl = async () => {
-    const url = await AsyncStorage.getItem('videoUrl');
-    this.setState({ url });
-  };
-  initVideo = async () => {
-    try {
-      const { edges } = await CameraRoll.getPhotos({
-        first: 20,
-        assetType: 'Videos',
-      });
-      if (!(Array.isArray(edges) && edges.length)) return;
-      const videoList = edges.map(value => value.node.image);
-      // this.setState({ videoList });
-      console.log(videoList);
-    } catch (err) {
-      Toast.showError(err.message);
-    }
-  };
+  // initVideo = async () => {
+  //   try {
+  //     const { edges } = await CameraRoll.getPhotos({
+  //       first: 20,
+  //       assetType: 'Videos',
+  //     });
+  //     if (!(Array.isArray(edges) && edges.length)) return;
+  //     const videoList = edges.map(value => value.node.image);
+  //     this.setState({ videoList });
+  //     console.log(videoList);
+  //   } catch (err) {
+  //     Toast.showError(err.message);
+  //   }
+  // };
   render() {
     const {
-      state: {
-        url,
-      },
       props: {
+        downloadFileStore: {
+          loading,
+          videoList,
+          getDownloadReq,
+          clearStrongListReq,
+          onDeleteItemReq,
+        },
         navigation: {
           navigate,
         },
       },
     } = this;
-    console.log('@url', url);
+    const videoListProps = {
+      videoList,
+      onDeleteItemReq,
+      onPlayItemReq: (uri) => {
+        navigate(routers.videoPlay, { videoUrl: uri });
+      },
+    };
     return (
-      <ContainerView>
+      <ContainerScrollView>
         <CommStatusBar />
         <TextView>
           Download
         </TextView>
-        <Button onPress={this.onPressDownload}>
-          <Text>下载</Text>
-        </Button>
-        <Button onPress={() => navigate(routers.demo)}>
-          <Text>Go mobx demo</Text>
-        </Button>
-        <Button onPress={() => navigate(routers.videoPlay, { videoUrl: url })}>
-          <Text>Go video play</Text>
-        </Button>
-      </ContainerView>
+        <HorizontalDivider />
+        <VideoList {...videoListProps} />
+        <HorizontalDivider />
+        <Button
+          loading={loading}
+          onPress={getDownloadReq}
+          text="下载"
+        />
+        <HorizontalDivider />
+        <Button
+          onPress={() => navigate(routers.demo)}
+          text="Go mobx demo"
+        />
+        <HorizontalDivider />
+        <Button
+          onPress={clearStrongListReq}
+          text="Clear Strong"
+        />
+        <HorizontalDivider />
+      </ContainerScrollView>
     );
   }
 }
@@ -104,7 +110,9 @@ Download.navigationOptions = ({ navigation }) => ({
   ),
 });
 
-Download.defaultProps = {};
+Download.defaultProps = {
+  downloadFileStore: {},
+};
 
 Download.propTypes = {
   navigation: PropTypes.shape({
@@ -119,6 +127,7 @@ Download.propTypes = {
       params: PropTypes.object,
     }),
   }).isRequired,
+  downloadFileStore: PropTypes.objectOf(PropTypes.any),
 };
 
 export default Download;

@@ -1,5 +1,5 @@
 /**
- * @component VideoPlay.js
+ * @component index.js
  * @description 视频播放
  * @time 2018/10/24
  * @author JUSTIN XU
@@ -13,8 +13,8 @@ import { Container } from 'native-base';
 import Orientation from 'react-native-orientation';
 
 // static source
-import logoIcon from '../../../../assets/img/test/logo.jpg';
-import LeftBackIcon from '../../../../components/Layout/LeftBackIcon';
+import logoIcon from '../../../../assets/images/test/logo.jpg';
+// import LeftBackIcon from '../../../../components/Layout/LeftBackIcon';
 // import hashVideo from '../../../../assets/video/hashcloud_video.mp4';
 
 const screenWidth = Dimensions.get('window').width;
@@ -259,7 +259,9 @@ class VideoPlayScreen extends Component {
         navigation,
       },
     } = this;
-    const videoUrl = navigation.getParam('videoUrl');
+    const {
+      url: videoUrl,
+    } = navigation.getParam('video') || {};
     return (
       <Container
         onLayout={this.onLayout}
@@ -326,7 +328,7 @@ class VideoPlayScreen extends Component {
                 <TouchableWithoutFeedback onPress={() => { this.onPressPlayButton(); }}>
                   <Image
                     style={styles.playButton}
-                    source={require('../../../../assets/img/video/icon_video_play.png')}
+                    source={require('../../../../assets/images/video/icon_video_play.png')}
                   />
                 </TouchableWithoutFeedback>
               }
@@ -338,7 +340,7 @@ class VideoPlayScreen extends Component {
                 <TouchableOpacity activeOpacity={0.3} onPress={() => { this.onControlPlayPress(); }}>
                   <Image
                     style={styles.playControl}
-                    source={this.state.isPlaying ? require('../../../../assets/img/video/icon_control_pause.png') : require('../../../../assets/img/video/icon_control_play.png')}
+                    source={this.state.isPlaying ? require('../../../../assets/images/video/icon_control_pause.png') : require('../../../../assets/images/video/icon_control_play.png')}
                   />
                 </TouchableOpacity>
                 <Text style={styles.time}>{formatTime(this.state.currentTime)}</Text>
@@ -346,7 +348,7 @@ class VideoPlayScreen extends Component {
                   style={{ flex: 1 }}
                   maximumTrackTintColor="#999999"
                   minimumTrackTintColor="#00c06d"
-                  thumbImage={require('../../../../assets/img/video/icon_control_slider.png')}
+                  thumbImage={require('../../../../assets/images/video/icon_control_slider.png')}
                   value={this.state.currentTime}
                   minimumValue={0}
                   maximumValue={this.state.duration}
@@ -356,7 +358,7 @@ class VideoPlayScreen extends Component {
                 <TouchableOpacity activeOpacity={0.3} onPress={() => { this.onControlShrinkPress(); }}>
                   <Image
                     style={styles.shrinkControl}
-                    source={this.state.isFullScreen ? require('../../../../assets/img/video/icon_control_shrink_screen.png') : require('../../../../assets/img/video/icon_control_full_screen.png')}
+                    source={this.state.isFullScreen ? require('../../../../assets/images/video/icon_control_shrink_screen.png') : require('../../../../assets/images/video/icon_control_full_screen.png')}
                   />
                 </TouchableOpacity>
               </View> : null
@@ -372,13 +374,9 @@ class VideoPlayScreen extends Component {
   }
 }
 
-VideoPlayScreen.navigationOptions = ({ navigation }) => ({
-  title: '视频播放',
-  headerLeft: (
-    <LeftBackIcon
-      onPress={() => navigation.goBack()}
-    />
-  ),
+// { navigation }
+VideoPlayScreen.navigationOptions = () => ({
+  header: null,
 });
 
 VideoPlayScreen.defaultProps = {};

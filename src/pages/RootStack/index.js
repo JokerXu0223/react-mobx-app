@@ -1,17 +1,22 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import { routers, theme } from '../../constants';
-import TabStack from './TabStack';
 
-import SearchModal from './Modals/Search';
+// components
 import { DefaultHeaderView } from '../../components/Layout/Styles';
+
+
+import SearchModalScreen from './Modals/Search';
+import VideoPlayScreen from './Modals/VideoPlay';
+import TabStack from './TabStack';
 
 const RouteConfigs = {
   /** Tab Stack */
   [routers.tabView]: TabStack,
   /** Modals Screen */
   // home
-  [routers.search]: SearchModal,
+  [routers.search]: SearchModalScreen,
+  [routers.videoPlay]: VideoPlayScreen,
 };
 
 const NavigatorConfig = {

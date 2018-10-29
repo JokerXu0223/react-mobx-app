@@ -12,8 +12,8 @@ import { routers, theme } from '../../../../constants';
 import HomeScreen from './Home';
 
 // static source
-import homeIcon from '../../../../assets/img/tabbar/home.png';
-import homeActiveIcon from '../../../../assets/img/tabbar/home-blue.png';
+import homeIcon from '../../../../assets/images/tabbar/home.png';
+import homeActiveIcon from '../../../../assets/images/tabbar/home-blue.png';
 import { DefaultHeaderView } from '../../../../components/Layout/Styles';
 
 const RouteConfig = {

@@ -7,11 +7,15 @@
 import autobind from 'autobind-decorator';
 
 import DemoStore from './demo';
+import DiscoverStore from './discover';
+import DownloadFileStore from './downloadFile';
 
 @autobind
 class RootStore {
   constructor() {
     this.demoStore = new DemoStore();
+    this.discoverStore = new DiscoverStore();
+    this.downloadFileStore = new DownloadFileStore();
   }
 }
 
