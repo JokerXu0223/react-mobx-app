@@ -11,16 +11,18 @@ import { routers } from '../constants';
 import AuthStack from './AuthStack';
 import BeginnerGuideStack from './BeginnerGuide';
 import RootStack from './RootStack';
+import AuthLoadingStack from './AuthLoading';
 
 const routeConfig = {
   [routers.auth]: AuthStack,
   [routers.beginnerGuide]: BeginnerGuideStack,
   [routers.root]: RootStack,
+  [routers.authLoading]: AuthLoadingStack,
 };
 
 const navigatorConfig = {
-  initialRouteName: routers.beginnerGuide,
-  // initialRouteName: routeIds.authLoading,
+  // initialRouteName: routers.root,
+  initialRouteName: routers.authLoading,
   cardStyle: { shadowColor: 'transparent' },
   headerMode: 'none',
 };
